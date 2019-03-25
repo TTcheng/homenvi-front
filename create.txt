@@ -1,0 +1,3 @@
+create-react-app homenvi-front
+yarn add react-app-rewired customize-cra --dev
+# edit package.json replace all react-scripts to react-app-rewired
