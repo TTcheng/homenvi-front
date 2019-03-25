@@ -7,3 +7,5 @@ yarn add less less-loader
 
 yarn add react-redux redux redux-thunk
 yarn add redux-devtools-extension --dev
+
+yarn add react-router-dom
