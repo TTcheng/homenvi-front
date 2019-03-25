@@ -3,7 +3,7 @@ yarn add react-app-rewired customize-cra --dev
 # edit package.json replace all react-scripts to react-app-rewired
 yarn add antd
 yarn add babel-plugin-import --dev
-yarn add less less-loader
+yarn add less@2 less-loader
 
 yarn add react-redux redux redux-thunk
 yarn add redux-devtools-extension --dev
