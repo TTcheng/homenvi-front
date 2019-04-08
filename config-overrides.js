@@ -1,4 +1,4 @@
-const {override, useBabelRc, fixBabelImports, addLessLoader} = require('customize-cra');
+const {override, addDecoratorsLegacy, useBabelRc, fixBabelImports, addLessLoader} = require('customize-cra');
 
 module.exports = override(
     // 使用Babel-plugin-import按需加载
@@ -13,6 +13,7 @@ module.exports = override(
         javascriptEnabled: true,
         modifyVars: {'@primary-color': '#1DA57A'},
     }),
+    addDecoratorsLegacy(),
     // 使用.babelrc
     // useBabelRc()
 );
