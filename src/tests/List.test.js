@@ -1,4 +1,4 @@
-import List from './List'
+import List from '../utils/List'
 
 
 test('list constructor with illegal args', () => {

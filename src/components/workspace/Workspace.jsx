@@ -4,25 +4,29 @@ import {Breadcrumb, Button, Layout, Menu} from "antd";
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import GlobalHeader from "../global-header/GlobalHeader";
-import logo from '../homenvi.svg'
+import logo from '../../containers/homenvi.svg'
+import {BaseConstants} from "../../utils/Constants";
 
 const {Header, Footer, Content} = Layout;
 
 class Workspace extends Component {
+
+  componentDidMount() {
+    if (sessionStorage.getItem(BaseConstants.Authorization)){
+      this.props.fetchUser();
+    }
+  }
+
   static propTypes = {
     user: PropTypes.object.isRequired,
+    fetchUser: PropTypes.func.isRequired,
   };
 
   render() {
     return (
       <Layout>
         <GlobalHeader logo={logo}
-                      currentUser={{
-                        name: 'Serati Ma',
-                        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-                        userid: '00000001',
-                        notifyCount: 12,
-                      }}
+                      currentUser={this.props.user}
         />
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <Breadcrumb linkRender={null} nameRender={null}>

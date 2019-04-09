@@ -1,4 +1,4 @@
-import {auth} from "./request";
+import {auth} from "../utils/request";
 
 test('auth success', ()=>{
   let authed = auth('admin','admin');

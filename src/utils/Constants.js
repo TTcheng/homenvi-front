@@ -6,5 +6,7 @@ export const client = {
 };
 
 export const BaseConstants = {
+  YES: 1,
+  NO: 0,
   Authorization: "Authorization",
 };

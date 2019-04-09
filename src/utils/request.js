@@ -1,13 +1,16 @@
 import {BaseConstants, client} from "./Constants";
 import {notification} from "antd";
-import UrlDataEncoder from "./UrlDataEncoder";
-import {apis} from "../config/route";
+import {encodeUrlData, setUrlParams} from "./UrlUtils";
+import {authorize} from "../config/apis";
 
 export default function request(method, url, data, callback) {
   method = method.toUpperCase();
+  url = data ? setUrlParams(url, data) : url;
   let body = undefined;
   if (method === 'GET') {
-    url += UrlDataEncoder.encode(data);
+    if (data) {
+      url += encodeUrlData(data);
+    }
   } else {
     body = body && JSON.stringify(body);
   }
@@ -27,8 +30,7 @@ export default function request(method, url, data, callback) {
     response.json().then((responseJson) => {
         if (response.ok) {
           if (!responseJson.failed) {
-            callback(responseJson.data);
-            notification.success({message: '操作成功！'});
+            callback(responseJson);
             return;
           }
           notification.error({message: responseJson.message});
@@ -52,12 +54,13 @@ const requestBody = client;
 export const auth = (username, password, callback) => {
   requestBody.username = username;
   requestBody.password = password;
-  fetch(apis.login, {
-    method: 'POST',
+  const {route, method} = authorize.login;
+  fetch(route, {
+    method: method,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: UrlDataEncoder.encode(requestBody)
+    body: encodeUrlData(requestBody)
   }).then((response) => {
     response.json().then((responseJson) => {
       if (response.ok) {
@@ -83,7 +86,8 @@ export const auth = (username, password, callback) => {
     });
   });
 };
-export const get = (url, data, callback) => request('GET', callback);
+export const get = (url, data, callback) => request('GET', url, data, callback);
 export const post = (url, data, callback) => request('POST', url, data, callback);
 export const put = (url, data, callback) => request('PUT', url, data, callback);
 export const del = (url, data, callback) => request('DELETE', url, data, callback);
+export const apiRequest = (api, data, callback) => request(api.method, api.route, data, callback);

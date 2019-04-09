@@ -18,7 +18,7 @@ export default function NoticeList(props) {
       <ListView className="List">
         {data.map((item, i) => {
           const itemCls = classNames("item", {
-            ["read"]: item.read,
+            ["read"]: item.unread,
           });
           return (
             <ListView.Item className={itemCls} key={item.key || i} onClick={() => onClick(item)}>

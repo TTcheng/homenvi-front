@@ -5,8 +5,9 @@ import {
 } from 'antd';
 
 import './login.css'
-import logo from '../homenvi.svg'
+import logo from '../../containers/homenvi.svg'
 import {auth} from "../../utils/request";
+import {routes} from "../../config/routes";
 
 @withRouter
 class NormalLoginForm extends React.Component {
@@ -60,11 +61,11 @@ class NormalLoginForm extends React.Component {
           })(
             <Checkbox className={"login-form-remember"}>记住我</Checkbox>
           )}
-          <a className="login-form-forgot" href="">忘记密码？</a>
+          <a className="login-form-forgot" href={routes.login}>忘记密码？</a>
           <Button type="primary" htmlType="submit" className="login-form-button">
             登录
           </Button>
-          Or <a href="" className={"login-form-register"}>立即注册!</a>
+          Or <a href={routes.login} className={"login-form-register"}>立即注册!</a>
         </Form.Item>
       </Form>
     );
