@@ -24,7 +24,7 @@ class NormalLoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         auth(values.username, values.password, () => {
-          this.props.history.push('/home');
+          this.props.history.push(routes.index);
         });
       }
     });

@@ -42,6 +42,10 @@ i.trigger {
 i.trigger:hover {
   background: #e6f7ff;
 }
+.left{
+  float: left;
+  height: 100%;
+}
 .right {
   float: right;
   height: 100%;

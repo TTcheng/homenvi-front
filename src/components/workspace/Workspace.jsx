@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
-import {Breadcrumb, Button, Layout, Menu} from "antd";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import {Breadcrumb, Layout} from "antd";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Redirect, Switch, Route} from "react-router-dom";
 
 import GlobalHeader from "../global-header/GlobalHeader";
 import logo from '../../containers/homenvi.svg'
 import {BaseConstants} from "../../utils/Constants";
+import {routes} from "../../config/routes";
+import Dashboard from "../dashboard/Dashboard";
 
-const {Header, Footer, Content} = Layout;
+const {Footer, Content} = Layout;
 
 class Workspace extends Component {
 
@@ -29,15 +32,15 @@ class Workspace extends Component {
                       currentUser={this.props.user}
         />
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
-          <Breadcrumb linkRender={null} nameRender={null}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <div style={{background: '#fff', padding: 24, minHeight: 480}}>Content</div>
+          <div style={{background: '#fff', padding: 24, minHeight: 480}}>
+            <Switch>
+              <Route path={routes.dashboard} component={Dashboard}/>
+              <Redirect to={routes.dashboard}/>
+            </Switch>
+          </div>
         </Content>
         <Footer style={{textAlign: "center"}}>
-          Ant Design ©2018 Created by Ant UED
+          Homenvi . Created by ChunchengWang
         </Footer>
       </Layout>
     );

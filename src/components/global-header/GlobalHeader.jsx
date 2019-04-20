@@ -1,13 +1,15 @@
 import React, {PureComponent} from 'react';
-import {NavLink} from 'react-router-dom'
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import {Menu, Icon, Spin, Tag, Dropdown, Avatar, Tooltip,} from 'antd';
+import {withRouter} from "react-router-dom";
 
 import './GlobalHeader.css'
 import HeaderSearch from "../header-search/HeaderSearch";
 import NoticeIcon from "../notice-icon/NoticeIcon";
+import {routes} from "../../config/routes";
 
+@withRouter
 export default class GlobalHeader extends PureComponent {
 
   getNoticeData() {
@@ -42,6 +44,15 @@ export default class GlobalHeader extends PureComponent {
     return groupBy(newNotices, 'type');
   }
 
+  onNavMenuClick = (item) => {
+    const path = routes.index + "/" + item.key;
+    if (item.key === "dashboard") {
+      this.props.history.replace(path);
+      return;
+    }
+    this.props.history.push(path);
+  };
+
   render() {
     const {
       currentUser = {},
@@ -71,8 +82,15 @@ export default class GlobalHeader extends PureComponent {
     const noticeData = this.getNoticeData();
     return (
       <div className="header">
-        <img className="ml-4 mr-4" src={logo} alt="logo" width="128" height="64"/>
-        <span>Dashboard</span>
+        <img className="ml-4 mr-4 float-left" src={logo} alt="logo" width="128" height="64"/>
+        <Menu className={"left"} mode={"horizontal"} onClick={this.onNavMenuClick} defaultSelectedKeys={["dashboard"]}>
+          <Menu.Item style={{"marginTop":"6px"}} key={"dashboard"}>
+            仪表盘
+          </Menu.Item>
+          <Menu.Item key={"report"}>
+            报表
+          </Menu.Item>
+        </Menu>
         <div className="right">
           <HeaderSearch
             className="action search"

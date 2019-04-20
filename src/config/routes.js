@@ -1,4 +1,5 @@
 export const routes = {
-  index: '/home',
+  index: '/workspace',
   login: '/login',
+  dashboard: '/workspace/dashboard',
 };
