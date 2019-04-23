@@ -1,36 +1,92 @@
 import React, {PureComponent} from 'react';
 import ReactEcharts from 'echarts-for-react';
+import * as PropTypes from 'prop-types';
 
-import './AxisChart.css'
+import './AxisChart.css';
+import AxisChartData from "../../model/axis-chart-data";
 
 export default class AxisChart extends PureComponent {
+  static propTypes = {
+    data: PropTypes.instanceOf(AxisChartData).isRequired,
+  };
+
+  resolveSeries = (yAxisData, nameUnits) => {
+    let res = [];
+    yAxisData.forEach((item, index) => {
+      let series = {
+        name: '温度',
+        type: 'line',
+        stack: '总量',
+        yAxisIndex: 0,
+        areaStyle: {normal: {}},
+        data: [120, 132, 101, 134, 90, 230, 210]
+      };
+      series.data = item.data;
+      series.name = item.name;
+      nameUnits.forEach((value, index) => {
+        if (series.name === value.name) {
+          series.yAxisIndex = index;
+        }
+      });
+      res[index] = series;
+    });
+    return res;
+  };
+
+  resolveNames = (nameUnits) => {
+    let names = [];
+    nameUnits.forEach((value) => {
+      names.push(value.name);
+    });
+    return names
+  };
+
+  resolveYAxis = (nameUnits) => {
+    let yAxis = [];
+    nameUnits.forEach((nameUnit) => {
+      let cur = {
+        name: '温度',
+        type: 'value',
+        axisLabel: {
+          formatter: `{value} ${nameUnit.value}`, // 格式化纵坐标刻度值 25℃
+        }
+      };
+      cur.name = nameUnit.name;
+      yAxis.push(cur);
+    });
+    return yAxis;
+  };
+
   getOption = () => {
+
+    const {title, xAxisData, yAxisData, nameUnitPairs} = this.props.data;
     return {
       title: {
-        text: '堆叠区域图'
+        text: title + '堆叠区域图'
       },
       tooltip: {
         trigger: 'axis',
-        formatter: (seriesArr) =>{
+        formatter: (seriesArr) => {
           let relVal = "";
           seriesArr.forEach((series) => {
             relVal += `${series.seriesName} : ${series.value}`;
-            if (series.seriesName === '湿度') {
-              relVal += '%'
-            } else {
-              relVal += '℃';
-            }
-            relVal += '<br/>'
+            nameUnitPairs.forEach((nameUnit) => {
+              if (series.seriesName === nameUnit.name) {
+                relVal += nameUnit.value;
+                relVal += '<br/>';
+              }
+            });
           });
           return relVal;
         },
       },
       legend: {
-        data: ['湿度', '温度', '体感温度']
+        data: this.resolveNames(nameUnitPairs)
+        //['湿度', '温度', '体感温度']
       },
       toolbox: {
         feature: {
-          saveAsImage: {name: '温湿度'}
+          saveAsImage: {name: title}
         }
       },
       grid: {
@@ -43,42 +99,11 @@ export default class AxisChart extends PureComponent {
         {
           type: 'category',
           boundaryGap: false,
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          data: xAxisData
         }
       ],
-      yAxis: [
-        {
-          name: '温度℃',
-          type: 'value',
-        }, {
-          name: '湿度%',
-          type: 'value',
-        }
-      ],
-      series: [
-        {
-          name: '湿度',
-          type: 'line',
-          stack: '总量',
-          yAxisIndex: 1,
-          areaStyle: {normal: {}},
-          data: [120, 132, 101, 134, 90, 230, 210]
-        },
-        {
-          name: '温度',
-          type: 'line',
-          stack: '总量',
-          areaStyle: {normal: {}},
-          data: [220, 182, 191, 234, 290, 330, 310]
-        },
-        {
-          name: '体感温度',
-          type: 'line',
-          stack: '总量',
-          areaStyle: {normal: {}},
-          data: [150, 232, 201, 154, 190, 330, 410]
-        }
-      ]
+      yAxis: this.resolveYAxis(nameUnitPairs),
+      series: this.resolveSeries(yAxisData, nameUnitPairs),
     };
   };
 

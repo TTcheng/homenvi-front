@@ -10,7 +10,7 @@ import NoticeIcon from "../notice-icon/NoticeIcon";
 import {routes} from "../../config/routes";
 
 @withRouter
-export default class GlobalHeader extends PureComponent {
+class GlobalHeader extends PureComponent {
 
   getNoticeData() {
     const {notices = []} = this.props;
@@ -158,3 +158,5 @@ export default class GlobalHeader extends PureComponent {
     );
   }
 }
+
+export default GlobalHeader;
