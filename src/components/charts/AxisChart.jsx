@@ -81,7 +81,8 @@ export default class AxisChart extends PureComponent {
         },
       },
       legend: {
-        data: this.resolveNames(nameUnitPairs)
+        data: nameUnitPairs.map(nameUnit => (nameUnit.name))
+          //this.resolveNames(nameUnitPairs)
         //['湿度', '温度', '体感温度']
       },
       toolbox: {

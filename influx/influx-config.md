@@ -19,5 +19,5 @@ SELECT * FROM collections LIMIT 1;
 
 ## 3.add to server
 ````shell
-curl -H "Authorization: Bearer 18467d75-bdbb-43c2-b5f6-c1b102f733f2" -H "Content-Type: application/json" -X POST 'http://localhost/api/homenvi/influxusers' --data '{"username":"homenvi-front","password":"xxxx"}'
+curl -H "Authorization: Bearer 18467d75-bdbb-43c2-b5f6-c1b102f733f2" -H "Content-Type: application/json" -X POST 'http://localhost/api/homenvi/influxusers' --data '{"username":"homenvi-front","password":"xxxx","authorities":"READ"}'
 ````

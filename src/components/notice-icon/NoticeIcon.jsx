@@ -1,93 +1,88 @@
 import React, {PureComponent} from 'react';
-import {Popover, Icon, Tabs, Badge, Spin} from 'antd';
+import {Badge, Icon, Popover, Spin, Tabs} from 'antd';
 import classNames from 'classnames';
-import List from './NoticeList';
+
+import NoticeList from './NoticeList';
 import './NoticeIcon.css';
 
 const {TabPane} = Tabs;
 
 export default class NoticeIcon extends PureComponent {
-  static defaultProps = {
-    onItemClick: () => {
-    },
-    onPopupVisibleChange: () => {
-    },
-    onTabChange: () => {
-    },
-    onClear: () => {
-    },
+  state = {
     loading: false,
-    locale: {
-      emptyText: '暂无数据',
-      clear: '清空',
-    },
-    emptyImage: 'https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg',
   };
-  static Tab = TabPane;
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-    if (props.children && props.children[0]) {
-      this.state.tabType = props.children[0].props.title;
+  getNoticeData = (type, page = 0, size = 5) => {
+    const {notices, currentUser, fetchNoticeData} = this.props;
+    const exist = notices[type];
+    if (exist && exist.content) {
+      return;
     }
-  }
-
-  onItemClick = (item, tabProps) => {
-    const {onItemClick} = this.props;
-    onItemClick(item, tabProps);
-  };
-  onTabChange = tabType => {
-    this.setState({tabType});
-    this.props.onTabChange(tabType);
-  };
-
-  getNotificationBox() {
-    const {children, loading, locale} = this.props;
-    if (!children) {
-      return null;
-    }
-    const panes = React.Children.map(children, child => {
-      const title =
-        child.props.list && child.props.list.length > 0
-          ? `${child.props.title} (${child.props.list.length})`
-          : child.props.title;
-      return (
-        <TabPane tab={title} key={child.props.title}>
-          <List
-            {...child.props}
-            data={child.props.list}
-            onClick={item => this.onItemClick(item, child.props)}
-            onClear={() => this.props.onClear(child.props.title)}
-            title={child.props.title}
-            locale={locale}
-          />
-        </TabPane>
-      );
+    this.setState({loading: true});
+    fetchNoticeData({type, usreid: currentUser.userid, page, size}, () => {
+      this.setState({loading: false})
     });
+  };
+
+  onItemClick = (item) => {
+    // todo
+  };
+  onTabChange = (type) => {
+    this.getNoticeData(type)
+  };
+
+  onVisibleChange = (type) => {
+    this.getNoticeData(type);
+  };
+
+  getNotificationBox = () => {
+    const {notices} = this.props;
     return (
-      <Spin spinning={loading} delay={0}>
+      <Spin spinning={this.state.loading} delay={0}>
         <Tabs className="tabs" onChange={this.onTabChange}>
-          {panes}
+          <TabPane tab={"未读"} key={"unread"}>
+            <NoticeList
+              data={notices.unread}
+              type={'unread'}
+              emptyText="您已读完所有消息"
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+              onClick={item => this.onItemClick(item)}
+            />
+          </TabPane>
+          <TabPane tab={"已读"} key={"read"}>
+            <NoticeList
+              data={notices.read}
+              type={'read'}
+              emptyText="这里什么也没有诶"
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+              onClick={item => this.onItemClick(item)}
+            />
+          </TabPane>
+          <TabPane tab={"全部"} key={"all"}>
+            <NoticeList
+              data={notices.all}
+              type={'all'}
+              emptyText="这里什么也没有诶"
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
+              onClick={item => this.onItemClick(item)}
+            />
+          </TabPane>
         </Tabs>
       </Spin>
     );
-  }
+  };
 
   render() {
-    const {className, count, popupAlign, onPopupVisibleChange} = this.props;
+    const {className, currentUser, popupAlign} = this.props;
     const noticeButtonClass = classNames(className, "noticeButton");
     const notificationBox = this.getNotificationBox();
     const trigger = (
       <span className={noticeButtonClass}>
-        <Badge count={count} className="badge">
+        <Badge count={currentUser.notifyCount} className="badge">
           <Icon type="bell" className="icon"/>
         </Badge>
       </span>
     );
-    if (!notificationBox) {
-      return trigger;
-    }
     const popoverProps = {};
     if ('popupVisible' in this.props) {
       popoverProps.visible = this.props.popupVisible;
@@ -100,7 +95,7 @@ export default class NoticeIcon extends PureComponent {
         trigger="click"
         arrowPointAtCenter
         popupAlign={popupAlign}
-        onVisibleChange={onPopupVisibleChange}
+        onVisibleChange={() => this.onVisibleChange('unread')}
         {...popoverProps}
       >
         {trigger}

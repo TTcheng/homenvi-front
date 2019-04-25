@@ -1,48 +1,21 @@
 import React, {PureComponent} from 'react';
-import moment from 'moment';
-import groupBy from 'lodash/groupBy';
-import {Menu, Icon, Spin, Tag, Dropdown, Avatar, Tooltip,} from 'antd';
+import {Avatar, Dropdown, Icon, Menu, Spin, Tag, Tooltip,} from 'antd';
 import {withRouter} from "react-router-dom";
+import * as PropTypes from 'prop-types';
 
 import './GlobalHeader.css'
 import HeaderSearch from "../header-search/HeaderSearch";
 import NoticeIcon from "../notice-icon/NoticeIcon";
 import {routes} from "../../config/routes";
+import User from "../../model/user";
 
 @withRouter
 class GlobalHeader extends PureComponent {
-
-  getNoticeData() {
-    const {notices = []} = this.props;
-    if (notices.length === 0) {
-      return {};
-    }
-    const newNotices = notices.map(notice => {
-      const newNotice = {...notice};
-      if (newNotice.datetime) {
-        newNotice.datetime = moment(notice.datetime).fromNow();
-      }
-      // transform id to item key
-      if (newNotice.id) {
-        newNotice.key = newNotice.id;
-      }
-      if (newNotice.extra && newNotice.status) {
-        const color = {
-          todo: '',
-          processing: 'blue',
-          urgent: 'red',
-          doing: 'gold',
-        }[newNotice.status];
-        newNotice.extra = (
-          <Tag color={color} style={{marginRight: 0}}>
-            {newNotice.extra}
-          </Tag>
-        );
-      }
-      return newNotice;
-    });
-    return groupBy(newNotices, 'type');
-  }
+  static propTypes = {
+    currentUser: PropTypes.instanceOf(User).isRequired,
+    notices: PropTypes.object.isRequired,
+    fetchNotifications: PropTypes.func.isRequired,
+  };
 
   onNavMenuClick = (item) => {
     const path = routes.index + "/" + item.key;
@@ -55,12 +28,11 @@ class GlobalHeader extends PureComponent {
 
   render() {
     const {
-      currentUser = {},
-      fetchingNotices,
+      currentUser,
+      notices,
+      fetchNotifications,
       logo,
-      onNoticeVisibleChange,
       onMenuClick,
-      onNoticeClear,
     } = this.props;
     const menu = (
       <Menu className="menu" selectedKeys={[]} onClick={onMenuClick}>
@@ -79,12 +51,11 @@ class GlobalHeader extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-    const noticeData = this.getNoticeData();
     return (
       <div className="header">
         <img className="ml-4 mr-4 float-left" src={logo} alt="logo" width="128" height="64"/>
         <Menu className={"left"} mode={"horizontal"} onClick={this.onNavMenuClick} defaultSelectedKeys={["dashboard"]}>
-          <Menu.Item style={{"marginTop":"6px"}} key={"dashboard"}>
+          <Menu.Item style={{"marginTop": "6px"}} key={"dashboard"}>
             仪表盘
           </Menu.Item>
           <Menu.Item key={"report"}>
@@ -114,35 +85,12 @@ class GlobalHeader extends PureComponent {
             </a>
           </Tooltip>
           <NoticeIcon
+            notices={notices}
+            fetchNoticeData={fetchNotifications}
+            currentUser={currentUser}
             className="action"
-            count={currentUser.notifyCount}
-            onItemClick={(item, tabProps) => {
-              console.log(item, tabProps); // eslint-disable-line
-            }}
-            onClear={onNoticeClear}
-            onPopupVisibleChange={onNoticeVisibleChange}
-            loading={fetchingNotices}
             popupAlign={{offset: [20, -16]}}
-          >
-            <NoticeIcon.Tab
-              list={noticeData['通知']}
-              title="通知"
-              emptyText="你已查看所有通知"
-              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-            />
-            <NoticeIcon.Tab
-              list={noticeData['消息']}
-              title="消息"
-              emptyText="您已读完所有消息"
-              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-            />
-            <NoticeIcon.Tab
-              list={noticeData['待办']}
-              title="待办"
-              emptyText="你已完成所有待办"
-              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-            />
-          </NoticeIcon>
+          />
           {currentUser.name ? (
             <Dropdown overlay={menu}>
                           <span className="action account">

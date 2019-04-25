@@ -30,8 +30,8 @@
   background: #e6f7ff;
 }
 .list .item .title {
-  font-weight: normal;
-  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 18px;
 }
 .list .item .description {
   font-size: 12px;
@@ -59,7 +59,7 @@
   margin-bottom: 16px;
   height: 76px;
 }
-.clear {
+.bottom {
   height: 46px;
   line-height: 46px;
   text-align: center;
@@ -68,8 +68,5 @@
   border-top: 1px solid #e8e8e8;
   transition: all 0.3s;
   cursor: pointer;
-}
-.clear:hover {
-  color: rgba(0, 0, 0, 0.85);
 }
 /*# sourceMappingURL=NoticeList.css.map */

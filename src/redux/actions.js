@@ -1,10 +1,64 @@
-import {GET_USER_FAILED, GET_USER_SUCCEED} from "./action-types";
+import moment from 'moment';
+
+import * as types from "./action-types";
 import {apiRequest} from "../utils/request";
-import {authorize} from "../config/apis";
+import {authorize, influx, notifications} from "../config/apis";
 import User from "../model/user";
+import {BaseConstants, NoticeTypes} from "../utils/Constants";
+import DbUser from "../model/dbuser";
+
 // action creators
-export const getUserSucceed = (user) => ({type: GET_USER_SUCCEED, data: user});
-export const getUserFailed = (error) => ({type: GET_USER_FAILED, data: error});
+const getUserSucceed = (user) => ({type: types.GET_USER_SUCCEED, data: user});
+const getDbUser = (dbUser) => ({type: types.GET_DBUSER, data: dbUser});
+const getUnreadNotices = (notices) => ({type: types.GET_UNREAD_NOTICES, data: notices});
+const getReadNotices = (notices) => ({type: types.GET_READ_NOTICES, data: notices});
+const getAllNotices = (notices) => ({type: types.GET_ALL_NOTICES, data: notices});
+const requestFailed = (error) => ({type: types.REQUEST_FAILED, data: error});
+
+export const fetchDbUser = () => {
+  let payload = {"username": BaseConstants.influxUser};
+  return (dispatch) => {
+    apiRequest(influx.getDbUser, payload, (responseJson) => {
+      let dbUser = new DbUser(responseJson.username, responseJson.password, responseJson.authorities);
+      debugger;// todo
+      dispatch(getDbUser(dbUser));
+      debugger;
+    });
+  };
+};
+
+export const fetchNotifications = (options, callback) => {
+  return (dispatch) => {
+    let payload = {...options};
+    const {read, unread, all} = NoticeTypes;
+    switch (options.type) {
+      case unread:
+        payload.unread = 1;
+        apiRequest(notifications.list, payload, (response) => {
+          dispatch(getUnreadNotices(fixNoticeData(response)));
+          callback(response);
+        });
+        break;
+      case read:
+        payload.unread = 0;
+        apiRequest(notifications.list, payload, (response) => {
+          dispatch(getReadNotices(fixNoticeData(response)));
+          callback(response);
+        });
+        break;
+      case all:
+        apiRequest(notifications.list, payload, (response) => {
+          dispatch(getAllNotices(fixNoticeData(response)));
+          callback(response);
+        });
+        break;
+    }
+  }
+};
+
+export const readNotice = (id) => {
+
+};
 
 export const fetchUser = () => {
   return (dispatch) => {
@@ -13,4 +67,20 @@ export const fetchUser = () => {
       dispatch(getUserSucceed(user));
     });
   };
+};
+
+const fixNoticeData = (origin) => {
+  let res = {...origin};
+  res.content = origin.content.map(item => {
+    const datetime = moment(item.creationDate).fromNow();
+    return {
+      id: item.id,
+      title: item.title,
+      content: item.content,
+      datetime,
+      unread: item.unread,
+      key: item.id,
+    };
+  });
+  return res;
 };

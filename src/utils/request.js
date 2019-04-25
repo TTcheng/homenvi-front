@@ -1,14 +1,15 @@
-import {BaseConstants, client} from "./Constants";
+import {BaseConstants, client, Symbol} from "./Constants";
 import {notification} from "antd";
 import {encodeUrlData, setUrlParams} from "./UrlUtils";
-import {authorize} from "../config/apis";
+import {authorize, GET, POST, PUT, DEL} from "../config/apis";
 
 export default function request(method, url, data, callback) {
   method = method.toUpperCase();
-  url = data ? setUrlParams(url, data) : url;
+  url = setUrlParams(url, data);
   let body = undefined;
-  if (method === 'GET') {
+  if (method === GET) {
     if (data) {
+      url += Symbol.QUES;
       url += encodeUrlData(data);
     }
   } else {
@@ -86,8 +87,8 @@ export const auth = (username, password, callback) => {
     });
   });
 };
-export const get = (url, data, callback) => request('GET', url, data, callback);
-export const post = (url, data, callback) => request('POST', url, data, callback);
-export const put = (url, data, callback) => request('PUT', url, data, callback);
-export const del = (url, data, callback) => request('DELETE', url, data, callback);
+export const get = (url, data, callback) => request(GET, url, data, callback);
+export const post = (url, data, callback) => request(POST, url, data, callback);
+export const put = (url, data, callback) => request(PUT, url, data, callback);
+export const del = (url, data, callback) => request(DEL, url, data, callback);
 export const apiRequest = (api, data, callback) => request(api.method, api.route, data, callback);

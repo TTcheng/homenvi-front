@@ -12,8 +12,8 @@ export const encodeUrlData = (data) => {
 export const setUrlParams = (url, data) => {
   let res = url;
   let params = url.match(/:\w+/g);
-  if (!params) {
-    throw new Error(`Not params to set in this url`)
+  if (!params || !data) {
+    return res;
   }
   params.forEach((param) => {
     const paramName = param.substring(1);

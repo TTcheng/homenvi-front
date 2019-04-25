@@ -12,6 +12,14 @@ test('just test', () => {
   expect(results).toEqual(expected)
 });
 
+test('test map', () => {
+  let arr = [1,3,5];
+  let res = arr.map((item,index)=>{
+    return item + 3;
+  });
+  expect(res).toEqual([4,6,8])
+});
+
 test('just &&', () => {
   let body;
   let res = body && JSON.stringify(body);

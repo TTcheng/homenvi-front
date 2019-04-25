@@ -13,7 +13,7 @@ import {routes} from "../../config/routes";
 class NormalLoginForm extends React.Component {
   componentDidMount() {
     notification.config({
-      placement: 'topRight',
+      placement: "bottomRight",
       top: 50,
       duration: 3
     })

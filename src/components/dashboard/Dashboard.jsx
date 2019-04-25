@@ -7,6 +7,9 @@ import Pair from "../../model/pair";
 
 
 class Dashboard extends Component {
+  static propTypes = {
+
+  };
   render() {
     let xData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     let yData = [];
@@ -28,9 +31,5 @@ class Dashboard extends Component {
     );
   }
 }
-
-Dashboard.propTypes = {
-  // getDashboardData: PropTypes.func.isRequired,
-};
 
 export default Dashboard;
