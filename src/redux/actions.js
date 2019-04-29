@@ -56,10 +56,6 @@ export const fetchNotifications = (options, callback) => {
   }
 };
 
-export const readNotice = (id) => {
-
-};
-
 export const fetchUser = () => {
   return (dispatch) => {
     apiRequest(authorize.currentUserDetail, undefined, (responseJson) => {
@@ -72,15 +68,17 @@ export const fetchUser = () => {
 const fixNoticeData = (origin) => {
   let res = {...origin};
   res.content = origin.content.map(item => {
-    const datetime = moment(item.creationDate).fromNow();
-    return {
-      id: item.id,
-      title: item.title,
-      content: item.content,
-      datetime,
-      unread: item.unread,
-      key: item.id,
-    };
+    return fixNotice(item)
   });
   return res;
+};
+
+const fixNotice = (origin) => {
+  const fromNow = moment(origin.creationDate).fromNow();
+  return {
+    ...origin,
+    datetime: origin.creationDate,
+    fromNow,
+    key: origin.id,
+  }
 };

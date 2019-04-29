@@ -31,7 +31,6 @@ class Workspace extends Component {
     dbUser: PropTypes.object,
     fetchUser: PropTypes.func.isRequired,
     fetchNotifications: PropTypes.func.isRequired,
-    readNotice: PropTypes.func.isRequired,
     fetchDbUser: PropTypes.func.isRequired,
   };
 

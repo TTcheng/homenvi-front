@@ -23,11 +23,11 @@ export const users = {
 
 // notifications
 export const notifications = {
-  list: {route: prefix + '/notifications', method: GET},
-  detail: {route: prefix + '/notifications/:id', method: GET},
-  create: {route: prefix + '/notifications', method: POST},
-  update: {route: prefix + '/notifications/:id', method: PUT},
-  remove: {route: prefix + '/notifications/:id', method: DEL},
+  list: {route: prefix + '/homenvi/notifications', method: GET},
+  detail: {route: prefix + '/homenvi/notifications/:id', method: GET},
+  create: {route: prefix + '/homenvi/notifications', method: POST},
+  update: {route: prefix + '/homenvi/notifications', method: PUT},
+  remove: {route: prefix + '/homenvi/notifications/:id', method: DEL},
 };
 
 // influxDB

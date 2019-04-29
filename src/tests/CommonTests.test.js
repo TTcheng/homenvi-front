@@ -1,4 +1,13 @@
 import {setUrlParams} from "../utils/UrlUtils";
+import {delElem} from "../utils/ArrayUtils";
+
+test('test del array elements', () => {
+  let arr = [1,3,5];
+  delElem(arr, 1);
+  expect(arr).toEqual([3,5]);
+  delElem(arr, 5);
+  expect(arr).toEqual([3]);
+});
 
 test('just test', () => {
   const origin = `http://localhost/:tenant/:user`;

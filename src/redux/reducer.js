@@ -7,7 +7,7 @@ const defaultState = {
   dbUser: {},
 };
 
-export function userReducer(state = defaultState, action) {
+export function appReducer(state = defaultState, action) {
   let newState = {...state};
   switch (action.type) {
     case types.GET_DBUSER:

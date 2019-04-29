@@ -4,35 +4,48 @@ import classNames from 'classnames';
 
 import NoticeList from './NoticeList';
 import './NoticeIcon.css';
+import NoticeModal from "./NoticeModal";
 
 const {TabPane} = Tabs;
 
 export default class NoticeIcon extends PureComponent {
   state = {
+    noticeOnRead: null,
+    noticeModalVisible: true,
     loading: false,
   };
 
   getNoticeData = (type, page = 0, size = 5) => {
-    const {notices, currentUser, fetchNoticeData} = this.props;
-    const exist = notices[type];
-    if (exist && exist.content) {
-      return;
-    }
+    const {currentUser, fetchNoticeData} = this.props;
     this.setState({loading: true});
-    fetchNoticeData({type, usreid: currentUser.userid, page, size}, () => {
+    fetchNoticeData({type, userid: currentUser.userid, page, size}, () => {
       this.setState({loading: false})
     });
   };
 
   onItemClick = (item) => {
-    // todo
+    this.setState({noticeOnRead: item, noticeModalVisible: true})
   };
   onTabChange = (type) => {
+    let {notices} = this.props;
+    const exist = notices[type];
+    if (exist && exist.content) {
+      return;
+    }
     this.getNoticeData(type)
   };
 
   onVisibleChange = (type) => {
-    this.getNoticeData(type);
+    this.onTabChange(type)
+  };
+  refreshNotices = (early, later) => {
+    this.getNoticeData(early);
+    setTimeout(() => {
+      this.getNoticeData(later);
+    }, 500);
+  };
+  closeModal = () => {
+    this.setState({noticeModalVisible: false})
   };
 
   getNotificationBox = () => {
@@ -68,6 +81,11 @@ export default class NoticeIcon extends PureComponent {
             />
           </TabPane>
         </Tabs>
+        <NoticeModal
+          notice={this.state.noticeOnRead}
+          visible={this.state.noticeModalVisible}
+          refreshNotices={this.refreshNotices}
+          close={this.closeModal}/>
       </Spin>
     );
   };

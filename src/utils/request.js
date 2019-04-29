@@ -13,7 +13,7 @@ export default function request(method, url, data, callback) {
       url += encodeUrlData(data);
     }
   } else {
-    body = body && JSON.stringify(body);
+    body = data && JSON.stringify(data);
   }
   return fetch(url, {
     method,
@@ -45,6 +45,7 @@ export default function request(method, url, data, callback) {
         }
       }
     ).catch((error) => {
+      console.error(error);
       notification.error({message: 'Invalid json response'});
       throw new Error('Invalid json response');
     });

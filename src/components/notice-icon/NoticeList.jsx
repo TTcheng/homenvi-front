@@ -8,9 +8,9 @@ import './NoticeList.css'
 NoticeList.propTypes = {
   data: PropTypes.object,
   onClick: PropTypes.func,
-  onClearUnread: PropTypes.func,
   type: PropTypes.string,
   emptyText: PropTypes.string,
+  emptyImage: PropTypes.string,
 };
 
 export default function NoticeList(props) {
@@ -42,10 +42,7 @@ export default function NoticeList(props) {
                 }
                 description={
                   <div>
-                    {/*<div className="description" title={item.content}>*/}
-                    {/*  {item.content}*/}
-                    {/*</div>*/}
-                    <div className="datetime">{item.datetime}</div>
+                    <div className="datetime">{item.fromNow}</div>
                   </div>
                 }
               />
