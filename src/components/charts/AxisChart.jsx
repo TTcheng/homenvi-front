@@ -3,22 +3,21 @@ import ReactEcharts from 'echarts-for-react';
 import * as PropTypes from 'prop-types';
 
 import './AxisChart.css';
-import AxisChartData from "../../model/axis-chart-data";
+import AxisChartData, {TimeSeriesChartData} from "../../model/axis-chart-data";
 
 export default class AxisChart extends PureComponent {
   static propTypes = {
-    data: PropTypes.instanceOf(AxisChartData).isRequired,
+    data: PropTypes.oneOfType([AxisChartData, TimeSeriesChartData]),
   };
 
-  resolveSeries = (yAxisData, nameUnits) => {
+  resolveSeries = (seriesData, nameUnits) => {
     let res = [];
-    yAxisData.forEach((item, index) => {
+    seriesData.forEach((item, index) => {
       let series = {
         name: '温度',
         type: 'line',
-        stack: '总量',
         yAxisIndex: 0,
-        areaStyle: {normal: {}},
+        showSymbol: false,
         data: [120, 132, 101, 134, 90, 230, 210]
       };
       series.data = item.data;
@@ -33,12 +32,21 @@ export default class AxisChart extends PureComponent {
     return res;
   };
 
-  resolveNames = (nameUnits) => {
-    let names = [];
-    nameUnits.forEach((value) => {
-      names.push(value.name);
-    });
-    return names
+  resolveXAxis = () => {
+    let {data} = this.props;
+    if (data.type === 'time') {
+      return {
+        type: 'time',
+        splitLine: {
+          show: false
+        }
+      }
+    }
+    return [{
+      type: 'category',
+      boundaryGap: false,
+      data: data.xAxisData
+    }]
   };
 
   resolveYAxis = (nameUnits) => {
@@ -59,17 +67,22 @@ export default class AxisChart extends PureComponent {
 
   getOption = () => {
 
-    const {title, xAxisData, yAxisData, nameUnitPairs} = this.props.data;
+    const {type, title, seriesData, nameUnitPairs} = this.props.data;
     return {
       title: {
-        text: title + '堆叠区域图'
+        text: title + '折线图'
       },
       tooltip: {
         trigger: 'axis',
         formatter: (seriesArr) => {
           let relVal = "";
           seriesArr.forEach((series) => {
-            relVal += `${series.seriesName} : ${series.value}`;
+            if (type === 'time') {
+              let timestamp = series.value[0], value = series.value[1];
+              relVal += `${timestamp.toLocaleString()} ${series.seriesName} : ${value}`;
+            } else {
+              relVal += `${series.seriesName} : ${series.value}`;
+            }
             nameUnitPairs.forEach((nameUnit) => {
               if (series.seriesName === nameUnit.name) {
                 relVal += nameUnit.value;
@@ -82,7 +95,6 @@ export default class AxisChart extends PureComponent {
       },
       legend: {
         data: nameUnitPairs.map(nameUnit => (nameUnit.name))
-          //this.resolveNames(nameUnitPairs)
         //['湿度', '温度', '体感温度']
       },
       toolbox: {
@@ -90,31 +102,54 @@ export default class AxisChart extends PureComponent {
           saveAsImage: {name: title}
         }
       },
+      // 支持缩放
+      dataZoom: [
+        {
+          type: 'slider',
+          show: true,
+          start: 94,
+          end: 100,
+          handleSize: 8
+        },
+        {
+          type: 'inside',
+          start: 94,
+          end: 100
+        },
+        {
+          type: 'inside',
+          xAxisIndex: 0,
+          filterMode: 'empty'
+        },
+        {
+          type: 'inside',
+          yAxisIndex: 0,
+          filterMode: 'empty'
+        }
+      ],
       grid: {
         left: '3%',
         right: '4%',
         bottom: '3%',
         containLabel: true
       },
-      xAxis: [
-        {
-          type: 'category',
-          boundaryGap: false,
-          data: xAxisData
-        }
-      ],
+      xAxis: this.resolveXAxis(),
       yAxis: this.resolveYAxis(nameUnitPairs),
-      series: this.resolveSeries(yAxisData, nameUnitPairs),
+      series: this.resolveSeries(seriesData, nameUnitPairs),
     };
   };
 
   render() {
-
+    if (!this.props.data) {
+      return null;
+    }
+    let option = this.getOption();
     return (
       <div className='examples'>
         <div className='parent'>
           <ReactEcharts
-            option={this.getOption()}
+            notMerge={true}
+            option={option}
             style={{height: '350px', width: '100%'}}
             className='react_for_echarts'/>
         </div>

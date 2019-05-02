@@ -8,7 +8,7 @@ import GlobalHeader from "../global-header/GlobalHeader";
 import logo from '../../containers/homenvi.svg'
 import {BaseConstants} from "../../utils/Constants";
 import {routes} from "../../config/routes";
-import Dashboard from "../dashboard/Dashboard";
+import {DashboardProvider} from "../../containers/ContainerProvider";
 
 const {Footer, Content} = Layout;
 
@@ -28,10 +28,8 @@ class Workspace extends Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
     notices: PropTypes.object,
-    dbUser: PropTypes.object,
     fetchUser: PropTypes.func.isRequired,
     fetchNotifications: PropTypes.func.isRequired,
-    fetchDbUser: PropTypes.func.isRequired,
   };
 
   render() {
@@ -46,7 +44,7 @@ class Workspace extends Component {
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <div style={{background: '#fff', padding: 24, minHeight: 480}}>
             <Switch>
-              <Route path={routes.dashboard} component={Dashboard}/>
+              <Route path={routes.dashboard} component={DashboardProvider}/>
               <Redirect to={routes.dashboard}/>
             </Switch>
           </div>

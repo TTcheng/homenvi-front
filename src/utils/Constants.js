@@ -1,3 +1,5 @@
+import Pair from "../model/pair";
+
 export const client = {
   grant_type: "password",
   client_id: "homenvi",
@@ -13,12 +15,80 @@ export const BaseConstants = {
 };
 
 export const NoticeTypes = {
-  read:'read',
-  unread:'unread',
-  all:'all',
+  read: 'read',
+  unread: 'unread',
+  all: 'all',
 };
 
 export const Symbol = {
   AND: '&',
   QUES: '?',
+  SPACE: ' ',
+  EQUAL: '=',
+  COMMA: ',',
+  SEMICOLON: ';',
+  ASTERISK: '*',
+};
+
+export const InfluxAuth = {
+  db: 'homenvi',
+  u: 'homenvi-front',
+  p: 'homenvi',
+};
+
+export const HomenviDataTypes = {
+  humidity: {
+    field: 'humidity',
+    name: '湿度',
+    unit: '%',
+    nameUnit: new Pair('湿度', '%')
+  },
+  celsius: {
+    field: 'celsius',
+    name: '温度',
+    unit: '℃',
+    nameUnit: new Pair('温度', '℃'),
+  },
+  heatIndexCelsius: {
+    field: 'heatIndexCelsius',
+    name: '体感温度',
+    unit: '℃',
+    nameUnit: new Pair('体感温度', '℃'),
+  },
+  fahrenheit: {
+    field: 'fahrenheit',
+    name: '华氏温度',
+    unit: '℉',
+    nameUnit: new Pair('华氏温度', '℉'),
+  },
+  heatIndexFahrenheit: {
+    field: 'heatIndexFahrenheit',
+    name: '华氏体感温度',
+    unit: '℉',
+    nameUnit: new Pair('华氏体感温度', '℉'),
+  },
+  brightness: {
+    field: 'brightness',
+    name: '光线强度',
+    unit: 'lux',
+    nameUnit: new Pair('光线强度', 'lux'),
+  },
+  dustDensity: {
+    field: 'dustDensity',
+    name: 'PM2.5浓度',
+    unit: 'ug/m³',
+    nameUnit: new Pair('PM2.5浓度', 'ug/m³'),
+  },
+  gasValue: {
+    field: 'gasValue',
+    name: '烟雾和有毒气体',
+    unit: '模拟值',
+    nameUnit: new Pair('烟雾和有毒气体', '模拟值'),
+  },
+  sound: {
+    field: 'sound',
+    name: '声音强度',
+    unit: '模拟值',
+    nameUnit: new Pair('声音强度', '模拟值'),
+  },
 };

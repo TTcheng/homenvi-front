@@ -1,31 +1,20 @@
 import moment from 'moment';
 
 import * as types from "./action-types";
-import {apiRequest} from "../utils/request";
+import request, {apiRequest} from "../utils/request";
 import {authorize, influx, notifications} from "../config/apis";
 import User from "../model/user";
-import {BaseConstants, NoticeTypes} from "../utils/Constants";
-import DbUser from "../model/dbuser";
+import {NoticeTypes, Symbol, InfluxAuth} from "../utils/Constants";
+import {encodeUrlData} from "../utils/UrlUtils";
+import {resolveSingleQuery} from "../utils/InfluxDataUtils";
 
 // action creators
 const getUserSucceed = (user) => ({type: types.GET_USER_SUCCEED, data: user});
-const getDbUser = (dbUser) => ({type: types.GET_DBUSER, data: dbUser});
 const getUnreadNotices = (notices) => ({type: types.GET_UNREAD_NOTICES, data: notices});
 const getReadNotices = (notices) => ({type: types.GET_READ_NOTICES, data: notices});
 const getAllNotices = (notices) => ({type: types.GET_ALL_NOTICES, data: notices});
 const requestFailed = (error) => ({type: types.REQUEST_FAILED, data: error});
-
-export const fetchDbUser = () => {
-  let payload = {"username": BaseConstants.influxUser};
-  return (dispatch) => {
-    apiRequest(influx.getDbUser, payload, (responseJson) => {
-      let dbUser = new DbUser(responseJson.username, responseJson.password, responseJson.authorities);
-      debugger;// todo
-      dispatch(getDbUser(dbUser));
-      debugger;
-    });
-  };
-};
+const getChartsData = (chartsData) => ({type: types.GET_CHARTS_DATA, data: chartsData});
 
 export const fetchNotifications = (options, callback) => {
   return (dispatch) => {
@@ -63,6 +52,20 @@ export const fetchUser = () => {
       dispatch(getUserSucceed(user));
     });
   };
+};
+
+export const fetchEChartsData = (sql, title, nameUnitPairs) => {
+  let {route, method} = influx.query;
+  let url = route;
+  url += Symbol.QUES;
+  url += encodeUrlData(InfluxAuth);
+  url += `&q=${sql}`;
+
+  return (dispatch) => {
+    request(method, url, undefined, (response) => {
+      dispatch(getChartsData(resolveSingleQuery(response, title, nameUnitPairs)));
+    });
+  }
 };
 
 const fixNoticeData = (origin) => {

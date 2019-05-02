@@ -19,3 +19,11 @@ export const delElemByUniqueKey = (array, key, value) => {
 };
 
 export const removeDuplicateItems = arr => [...new Set(arr)];
+
+export const arrayOfObjProps = (object) => {
+  let res = [];
+  Object.keys(object).forEach(key => {
+    res.push(object[key]);
+  });
+  return res;
+};

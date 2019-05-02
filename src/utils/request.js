@@ -31,7 +31,9 @@ export default function request(method, url, data, callback) {
     response.json().then((responseJson) => {
         if (response.ok) {
           if (!responseJson.failed) {
-            callback(responseJson);
+            if (callback){
+              callback(responseJson);
+            }
             return;
           }
           notification.error({message: responseJson.message});
