@@ -1,4 +1,4 @@
-import AxisChartData, {TimeSeriesChartData} from "../model/axis-chart-data";
+import AxisChartData, {TimeSeriesChartData, SeriesItem} from "../model/axis-chart-data";
 
 export const resolveSingleQuery = (response, title = '', nameUnitPairs = []) => {
   let isTimeSeries = false;
@@ -9,13 +9,20 @@ export const resolveSingleQuery = (response, title = '', nameUnitPairs = []) => 
   }
   let xData = [], seriesData = [], len = nameUnitPairs.length;
   for (let i = 0; i < len; i++) {
-    seriesData.push({name: nameUnitPairs[i].name, data: []})
+    seriesData.push(new SeriesItem(nameUnitPairs[i].name, []));
   }
   // time
   if (isTimeSeries) {
     values.forEach((value) => {
       for (let i = 0; i < len; i++) {
-        seriesData[i].data.push([new Date(value[0]), value[i + 1]])
+        const valueI = value[i + 1];
+        seriesData[i].data.push([new Date(value[0]), valueI]);
+        if (seriesData[i].min > valueI){
+          seriesData[i].min = valueI;
+        }
+        if (seriesData[i].max < valueI){
+          seriesData[i].max = valueI;
+        }
       }
     });
     return new TimeSeriesChartData(title, nameUnitPairs, seriesData);

@@ -2,7 +2,7 @@ export default class AxisChartData {
   type = 'category';
   title = '';
   xAxisData = [];
-  seriesData = [];
+  seriesData = []; // array of SeriesItem
   nameUnitPairs = []; // 名称和单位
 
   constructor(title, xAxisData, seriesData, nameUnitPairs) {
@@ -10,6 +10,20 @@ export default class AxisChartData {
     this.xAxisData = xAxisData;
     this.seriesData = seriesData;
     this.nameUnitPairs = nameUnitPairs;
+  }
+}
+
+export class SeriesItem {
+  name = '';
+  data = [];
+  min;
+  max;
+
+  constructor(name, data, min = 99999, max = -99999) {
+    this.name = name;
+    this.data = data;
+    this.min = min;
+    this.max = max;
   }
 }
 

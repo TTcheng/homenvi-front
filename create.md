@@ -41,3 +41,8 @@ yarn add bootstrap popper.js
 yarn add @babel/plugin-proposal-decorators
 ```
 add addDecoratorsLegacy(...) in config-overrides.js to support decorators
+
+## echarts support
+```shell
+yarn add echarts echarts-for-react
+```

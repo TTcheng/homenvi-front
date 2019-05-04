@@ -11,7 +11,7 @@ export const BaseConstants = {
   YES: 1,
   NO: 0,
   Authorization: "Authorization",
-  influxUser: "homenvi-front"
+  CollectDuration: 5, //seconds
 };
 
 export const NoticeTypes = {
@@ -83,12 +83,12 @@ export const HomenviDataTypes = {
     field: 'gasValue',
     name: '烟雾和有毒气体',
     unit: '模拟值',
-    nameUnit: new Pair('烟雾和有毒气体', '模拟值'),
+    nameUnit: new Pair('烟雾和有毒气体', ''),
   },
   sound: {
     field: 'sound',
     name: '声音强度',
     unit: '模拟值',
-    nameUnit: new Pair('声音强度', '模拟值'),
+    nameUnit: new Pair('声音强度', ''),
   },
 };

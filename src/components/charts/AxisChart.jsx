@@ -49,12 +49,17 @@ export default class AxisChart extends PureComponent {
     }]
   };
 
-  resolveYAxis = (nameUnits) => {
+  resolveYAxis = (seriesData, nameUnits) => {
     let yAxis = [];
-    nameUnits.forEach((nameUnit) => {
+    nameUnits.forEach((nameUnit, index) => {
       let cur = {
         name: '温度',
         type: 'value',
+        splitLine: {
+          show: false
+        },
+        min: Math.floor(seriesData[index].min - 5),
+        max: Math.floor(seriesData[index].max + 5),
         axisLabel: {
           formatter: `{value} ${nameUnit.value}`, // 格式化纵坐标刻度值 25℃
         }
@@ -102,30 +107,21 @@ export default class AxisChart extends PureComponent {
           saveAsImage: {name: title}
         }
       },
-      // 支持缩放
+      // 支持横向缩放
       dataZoom: [
         {
           type: 'slider',
           show: true,
+          xAxisIndex: 0,
           start: 94,
           end: 100,
           handleSize: 8
         },
         {
           type: 'inside',
-          start: 94,
-          end: 100
-        },
-        {
-          type: 'inside',
           xAxisIndex: 0,
           filterMode: 'empty'
         },
-        {
-          type: 'inside',
-          yAxisIndex: 0,
-          filterMode: 'empty'
-        }
       ],
       grid: {
         left: '3%',
@@ -134,7 +130,7 @@ export default class AxisChart extends PureComponent {
         containLabel: true
       },
       xAxis: this.resolveXAxis(),
-      yAxis: this.resolveYAxis(nameUnitPairs),
+      yAxis: this.resolveYAxis(seriesData, nameUnitPairs),
       series: this.resolveSeries(seriesData, nameUnitPairs),
     };
   };
