@@ -1,4 +1,4 @@
-import AxisChartData from "../model/axis-chart-data";
+import ChartData from "../model/chart-data";
 import Pair from "../model/pair";
 
 test('pair tests', () => {
@@ -14,7 +14,7 @@ test('pair tests', () => {
     data: [25, 27, 30, 34, 29, 31, 16]
   });
 
-  let data = new AxisChartData('温度曲线图', xData, yData, [new Pair('温度', '℃'), new Pair('湿度', '%')]);
+  let data = new ChartData('温度曲线图', xData, yData, [new Pair('温度', '℃'), new Pair('湿度', '%')]);
   const {title, xAxisData, yAxisData, nameUnitPairs} = data;
 
   expect(nameUnitPairs[0].value).toEqual('℃');

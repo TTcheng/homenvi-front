@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
-import {Breadcrumb, Layout, notification} from "antd";
+import {Layout, notification} from "antd";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Redirect, Switch, Route} from "react-router-dom";
+// import {Redirect, Route, Router} from "react-router-dom";
 
 import GlobalHeader from "../global-header/GlobalHeader";
 import logo from '../../containers/homenvi.svg'
 import {BaseConstants} from "../../utils/Constants";
-import {routes} from "../../config/routes";
-import {DashboardProvider} from "../../containers/ContainerProvider";
+// import {routes} from "../../config/routes";
+import {AxisChartProvider, CalendarChartProvider} from "../../containers/ContainerProvider";
+// import MonthTempChart from "../homenvi-charts/MonthTempChart";
 
 const {Footer, Content} = Layout;
 
@@ -43,10 +44,12 @@ class Workspace extends Component {
         />
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <div style={{background: '#fff', padding: 24, minHeight: 480}}>
-            <Switch>
-              <Route path={routes.dashboard} component={DashboardProvider}/>
-              <Redirect to={routes.dashboard}/>
-            </Switch>
+            <AxisChartProvider/>
+            <CalendarChartProvider/>
+            {/*<Switch>*/}
+            {/*  <Route path={routes.dashboard} component={AxisChartProvider}/>*/}
+            {/*  <Redirect to={routes.dashboard}/>*/}
+            {/*</Switch>*/}
           </div>
         </Content>
         <Footer style={{textAlign: "center"}}>

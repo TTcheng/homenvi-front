@@ -2,12 +2,12 @@ import React, {PureComponent} from 'react';
 import ReactEcharts from 'echarts-for-react';
 import * as PropTypes from 'prop-types';
 
-import './AxisChart.css';
-import AxisChartData, {TimeSeriesChartData} from "../../model/axis-chart-data";
+import './Chart.css';
+import ChartData, {TimeSeriesChartData} from "../../model/chart-data";
 
 export default class AxisChart extends PureComponent {
   static propTypes = {
-    data: PropTypes.oneOfType([AxisChartData, TimeSeriesChartData]),
+    data: PropTypes.oneOfType([ChartData, TimeSeriesChartData]),
   };
 
   resolveSeries = (seriesData, nameUnits) => {
@@ -141,14 +141,12 @@ export default class AxisChart extends PureComponent {
     }
     let option = this.getOption();
     return (
-      <div className='examples'>
-        <div className='parent'>
-          <ReactEcharts
-            notMerge={true}
-            option={option}
-            style={{height: '350px', width: '100%'}}
-            className='react_for_echarts'/>
-        </div>
+      <div className='parent'>
+        <ReactEcharts
+          notMerge={true}
+          option={option}
+          style={{height: '350px', width: '100%'}}
+          className='react_for_echarts'/>
       </div>
     );
   }

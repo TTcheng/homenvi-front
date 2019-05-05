@@ -27,3 +27,12 @@ export const arrayOfObjProps = (object) => {
   });
   return res;
 };
+
+export const contains = (array, target) => {
+  for (const value of array) {
+    if (value === target) {
+      return true;
+    }
+  }
+  return false;
+};

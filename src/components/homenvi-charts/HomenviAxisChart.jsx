@@ -4,7 +4,7 @@ import {Button, Checkbox, Col, Input, Row, Select, InputNumber} from "antd";
 
 import AxisChart from "../charts/AxisChart";
 import SqlHelper from "../../utils/SqlHelper";
-import AxisChartData, {TimeSeriesChartData} from "../../model/axis-chart-data";
+import ChartData, {TimeSeriesChartData} from "../../model/chart-data";
 import {HomenviDataTypes, BaseConstants} from '../../utils/Constants'
 import {arrayOfObjProps} from "../../utils/ArrayUtils";
 import {daysBetween, nMonthsAgo} from "../../utils/DateTimeUtils";
@@ -18,7 +18,7 @@ const defaultChecked = [allChecks[0], allChecks[1]];
 class HomenviAxisChart extends Component {
   static propTypes = {
     fetchEChartsData: PropTypes.func.isRequired,
-    chartsData: PropTypes.oneOfType([AxisChartData, TimeSeriesChartData]),
+    chartsData: PropTypes.oneOfType([ChartData, TimeSeriesChartData]),
     options: PropTypes.object.isRequired,
   };
 
