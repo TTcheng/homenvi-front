@@ -78,6 +78,21 @@ export const HomenviDataTypes = {
     name: 'PM2.5浓度',
     unit: 'ug/m³',
     nameUnit: new Pair('PM2.5浓度', 'ug/m³'),
+    categories: ['严重污染', '重度污染', '中度污染', '轻度污染', '良', '优'],
+    category: (value) => {
+      if (!value) return null;
+      if (value > 250) {
+        return '严重污染'
+      } else if (value > 200) {
+        return '重度污染'
+      } else if (value > 150) {
+        return '中度污染'
+      } else if (value > 100) {
+        return '轻度污染'
+      } else if (value > 50) {
+        return '良'
+      } else return '优'
+    }
   },
   gasValue: {
     field: 'gasValue',

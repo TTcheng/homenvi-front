@@ -6,7 +6,7 @@ import {authorize, influx, notifications} from "../config/apis";
 import User from "../model/user";
 import {NoticeTypes, Symbol, InfluxAuth} from "../utils/Constants";
 import {encodeUrlData} from "../utils/UrlUtils";
-import {resolveCalendarData, resolveSingleQuery} from "../utils/InfluxDataUtils";
+import {resolveCalendarData, resolveCategoryData, resolveSingleQuery} from "../utils/InfluxDataUtils";
 
 // action creators
 const getUserSucceed = (user) => ({type: types.GET_USER_SUCCEED, data: user});
@@ -16,6 +16,7 @@ const getAllNotices = (notices) => ({type: types.GET_ALL_NOTICES, data: notices}
 const requestFailed = (error) => ({type: types.REQUEST_FAILED, data: error});
 const getAxisChartData = (chartsData) => ({type: types.GET_AXIS_CHART_DATA, data: chartsData});
 const getCalendarChartData = (calendarData) => ({type: types.GET_CALENDAR_CHART_DATA, data: calendarData});
+const getCategoryChartData = (categoryData) => ({type: types.GET_CATEGORY_DATA, data: categoryData});
 
 export const fetchNotifications = (options, callback) => {
   return (dispatch) => {
@@ -79,6 +80,20 @@ export const fetchCalendarChartData = (sql, title, nameUnit) => {
   return (dispatch) => {
     request(method, url, undefined, (response) => {
       dispatch(getCalendarChartData(resolveCalendarData(response, title, nameUnit)));
+    });
+  }
+};
+
+export const fetchCategoryData = (sql, homenviDataType, title) => {
+  let {route, method} = influx.query;
+  let url = route;
+  url += Symbol.QUES;
+  url += encodeUrlData(InfluxAuth);
+  url += `&q=${sql}`;
+
+  return (dispatch) => {
+    request(method, url, undefined, (response) => {
+      dispatch(getCategoryChartData(resolveCategoryData(response, homenviDataType, title)));
     });
   }
 };

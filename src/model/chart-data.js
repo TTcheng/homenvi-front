@@ -48,3 +48,16 @@ export class CalendarData {
     this.month = month;
   }
 }
+
+export class CategoryData {
+  title = '';
+  seriesData = []; // array of {date,value,category}
+  nameUnit; // 名称和单位
+
+
+  constructor(title, seriesData, nameUnit) {
+    this.title = title;
+    this.seriesData = seriesData;
+    this.nameUnit = nameUnit;
+  }
+}

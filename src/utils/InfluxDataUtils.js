@@ -1,4 +1,4 @@
-import ChartData, {TimeSeriesChartData, SeriesItem, CalendarData} from "../model/chart-data";
+import ChartData, {TimeSeriesChartData, SeriesItem, CalendarData, CategoryData} from "../model/chart-data";
 
 export const resolveSingleQuery = (response, title = '', nameUnitPairs = []) => {
   let isTimeSeries = false;
@@ -56,4 +56,18 @@ export const resolveCalendarData = (response, title, nameUnit) => {
     seriesData.push([date, value[1]])
   });
   return new CalendarData(title, seriesData, nameUnit, month);
+};
+
+export const resolveCategoryData = (response, homenviDataType, title) => {
+  const series = response.results[0].series[0];
+  const {values} = series;
+  let seriesData = [];
+  values.forEach(value => {
+    const date = new Date(value[0]).toISOString().split('T')[0];
+    let realValue = value[1];
+    if (realValue > 300) realValue = 300;
+    const category = homenviDataType.category(realValue);
+    seriesData.push([date, realValue, category])
+  });
+  return new CategoryData(title, seriesData, homenviDataType.nameUnit);
 };

@@ -10,6 +10,9 @@ const defaultState = {
 export function appReducer(state = defaultState, action) {
   let newState = {...state};
   switch (action.type) {
+    case types.GET_CATEGORY_DATA:
+      newState.chartsData.category = action.data;
+      return newState;
     case types.GET_CALENDAR_CHART_DATA:
       newState.chartsData.calendar = action.data;
       return newState;
