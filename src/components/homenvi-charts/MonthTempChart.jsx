@@ -47,13 +47,8 @@ class MonthTempChart extends Component {
   };
 
   getOption = () => {
-    const {title, month, nameUnit, seriesData} = this.props.data;
+    const {month, nameUnit, seriesData} = this.props.data;
     return {
-      title: {
-        top: 30,
-        left: '',
-        text: title
-      },
       tooltip: {
         trigger: 'item',
         formatter: function (item) {
@@ -65,12 +60,12 @@ class MonthTempChart extends Component {
         min: -60,
         max: 60,
         calculable: true,
-        orient: 'vertical',
-        left: '25%',
+        orient: 'horizontal',
+        left: 'center',
         inRange: {
           color: ['#5291ff', '#FFF', 'red'],
         },
-        top: 30,
+        bottom: 20,
         formatter: (value) => {
           return `${Math.round(value)}${nameUnit.value}`
         }
@@ -118,14 +113,17 @@ class MonthTempChart extends Component {
       return null;
     }
     let option = this.getOption();
+    const {title} = this.props.data;
     return (
       <div className='parent'>
+        <div className="title center">{title}</div>
         <ReactEcharts
           notMerge={true}
           option={option}
           style={{height: '350px', width: '100%'}}
           className='react_for_echarts'/>
-        <div>
+        <div className="center">
+          <label className="plain-text">选择月份：</label>
           <MonthPicker
             defaultValue={this.startOfMonth()}
             defaultPickerValue={this.startOfMonth()}

@@ -45,21 +45,8 @@ class Pm25CategoryChart extends Component {
       {name: '等级', index: 2, text: '等级'}
     ];
 
-    const {title, seriesData} = this.props.data;
+    const {seriesData} = this.props.data;
     return {
-      title: {
-        top: 30,
-        left: '',
-        text: title
-      },
-      legend: {
-        bottom: 30,
-        data: [dustDensity.name],
-        itemGap: 20,
-        textStyle: {
-          fontSize: 14
-        }
-      },
       parallelAxis: [
         {dim: 0, name: schema[0].text, inverse: true, nameLocation: 'start', type: 'category'},
         {dim: 1, name: schema[1].text, min: 0, max: 250},
@@ -72,7 +59,10 @@ class Pm25CategoryChart extends Component {
         show: true,
         min: 0,
         max: 300,
+        left: 'center',
+        bottom: 20,
         dimension: 1,
+        orient: 'horizontal',
         inRange: {
           color: ['#f00', '#ff0', '#0f0'].reverse(),
         }
@@ -116,14 +106,16 @@ class Pm25CategoryChart extends Component {
     }
     const option = this.getOption();
     const {start, end} = this.state;
+    const {title} = this.props.data;
     return (
       <div className='parent'>
+        <div className="title center">{title}</div>
         <ReactEcharts
           notMerge={true}
           option={option}
           style={{height: '350px', width: '100%'}}
           className='react_for_echarts'/>
-        <div>
+        <div className={"center"}>
           <RangePicker defaultPickerValue={[start, end]} defaultValue={[start, end]} onChange={this.onRangePick}/>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
-import {Layout, notification} from "antd";
+import {Col, Layout, notification, Row} from "antd";
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import {Redirect, Route, Router} from "react-router-dom";
 
@@ -14,6 +14,7 @@ import {
   PM25ChartProvider,
   StatisticProvider
 } from "../../containers/ContainerProvider";
+import GaugeChart from "../homenvi-charts/GaugeChart";
 
 const {Footer, Content} = Layout;
 
@@ -38,7 +39,7 @@ class Workspace extends Component {
   };
 
   render() {
-    const {user,notices,fetchNotifications} = this.props;
+    const {user, notices, fetchNotifications} = this.props;
     return (
       <Layout>
         <GlobalHeader logo={logo}
@@ -49,9 +50,20 @@ class Workspace extends Component {
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <div style={{background: '#fff', padding: 24, minHeight: 480}}>
             <StatisticProvider/>
+            <div>
+              <Row>
+                <Col span={8}>
+                  <CalendarChartProvider/>
+                </Col>
+                <Col span={8}>
+                  <GaugeChart/>
+                </Col>
+                <Col span={8}>
+                  <PM25ChartProvider/>
+                </Col>
+              </Row>
+            </div>
             <AxisChartProvider/>
-            <CalendarChartProvider/>
-            <PM25ChartProvider/>
             {/*<Switch>*/}
             {/*  <Route path={routes.dashboard} component={AxisChartProvider}/>*/}
             {/*  <Redirect to={routes.dashboard}/>*/}
