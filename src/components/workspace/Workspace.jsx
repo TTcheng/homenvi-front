@@ -8,8 +8,12 @@ import GlobalHeader from "../global-header/GlobalHeader";
 import logo from '../../containers/homenvi.svg'
 import {BaseConstants} from "../../utils/Constants";
 // import {routes} from "../../config/routes";
-import {AxisChartProvider, CalendarChartProvider, PM25ChartProvider} from "../../containers/ContainerProvider";
-// import MonthTempChart from "../homenvi-charts/MonthTempChart";
+import {
+  AxisChartProvider,
+  CalendarChartProvider,
+  PM25ChartProvider,
+  StatisticProvider
+} from "../../containers/ContainerProvider";
 
 const {Footer, Content} = Layout;
 
@@ -44,6 +48,7 @@ class Workspace extends Component {
         />
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <div style={{background: '#fff', padding: 24, minHeight: 480}}>
+            <StatisticProvider/>
             <AxisChartProvider/>
             <CalendarChartProvider/>
             <PM25ChartProvider/>

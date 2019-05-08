@@ -5,14 +5,12 @@ import {Button, Checkbox, Col, Input, Row, Select, InputNumber} from "antd";
 import AxisChart from "../charts/AxisChart";
 import SqlHelper from "../../utils/SqlHelper";
 import ChartData, {TimeSeriesChartData} from "../../model/chart-data";
-import {HomenviDataTypes, BaseConstants} from '../../utils/Constants'
-import {arrayOfObjProps} from "../../utils/ArrayUtils";
+import {AllHomenviDataTypes, BaseConstants} from '../../utils/Constants'
 import {daysBetween, nMonthsAgo} from "../../utils/DateTimeUtils";
 
 const Option = Select.Option;
 
-const homenviDataTypeArr = arrayOfObjProps(HomenviDataTypes);
-const allChecks = homenviDataTypeArr.map(value => (value.name));
+const allChecks = AllHomenviDataTypes.map(value => (value.name));
 const defaultChecked = [allChecks[0], allChecks[1]];
 
 class HomenviAxisChart extends Component {
@@ -35,7 +33,7 @@ class HomenviAxisChart extends Component {
   fetchData = () => {
     const checkedTypes = [];
     this.state.checked.forEach((check) => {
-      for (let type of homenviDataTypeArr) {
+      for (let type of AllHomenviDataTypes) {
         if (check === type.name) {
           checkedTypes.push(type);
           break;

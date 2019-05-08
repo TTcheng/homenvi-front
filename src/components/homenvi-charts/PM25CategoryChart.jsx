@@ -17,7 +17,7 @@ class Pm25CategoryChart extends Component {
   };
 
   state = {
-    start: moment().month(moment().month() - 1),
+    start: moment().month((moment().month() - 1 + 12) % 12),
     end: moment(),
   };
 

@@ -47,7 +47,9 @@ export default function request(method, url, data, callback) {
         }
       }
     ).catch((error) => {
+      console.error('>>>>>>>>>>>..');
       console.error(error);
+      console.error('>>>>>>>>>>>..');
       notification.error({message: 'Invalid json response'});
       throw new Error('Invalid json response');
     });

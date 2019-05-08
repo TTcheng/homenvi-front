@@ -13,10 +13,11 @@ import {
   fetchNotifications,
   fetchAxisChartData,
   fetchCalendarChartData,
-  fetchCategoryData
+  fetchCategoryData, fetchStatistics
 } from "../redux/actions";
 import MonthTempChart from "../components/homenvi-charts/MonthTempChart";
 import Pm25CategoryChart from "../components/homenvi-charts/PM25CategoryChart";
+import Statistics from "../components/statistics/Statistics";
 
 moment.locale('zh-cn');
 
@@ -64,5 +65,17 @@ const PM25ChartCom = connect(
 export const PM25ChartProvider = () => (
   <Provider store={store}>
     <PM25ChartCom/>
+  </Provider>
+);
+
+
+const StatisticCom = connect(
+  (state) => ({statistics: state.statistics}),
+  {fetchStatistics: fetchStatistics}
+)(Statistics);
+
+export const StatisticProvider = () => (
+  <Provider store={store}>
+    <StatisticCom/>
   </Provider>
 );

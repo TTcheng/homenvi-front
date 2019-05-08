@@ -4,9 +4,16 @@ import * as types from "./action-types";
 import request, {apiRequest} from "../utils/request";
 import {authorize, influx, notifications} from "../config/apis";
 import User from "../model/user";
-import {NoticeTypes, Symbol, InfluxAuth} from "../utils/Constants";
+import {InfluxAuth, NoticeTypes, Symbol, VitalHomenviDataTypes} from "../utils/Constants";
 import {encodeUrlData} from "../utils/UrlUtils";
-import {resolveCalendarData, resolveCategoryData, resolveSingleQuery} from "../utils/InfluxDataUtils";
+import {
+  resolveCalendarData,
+  resolveCategoryData,
+  resolveSingleQuery,
+} from "../utils/InfluxDataUtils";
+import SqlHelper from "../utils/SqlHelper";
+import Pair from "../model/pair";
+import HomenviStatistic, {trends} from "../model/homenvi-statistic";
 
 // action creators
 const getUserSucceed = (user) => ({type: types.GET_USER_SUCCEED, data: user});
@@ -17,6 +24,7 @@ const requestFailed = (error) => ({type: types.REQUEST_FAILED, data: error});
 const getAxisChartData = (chartsData) => ({type: types.GET_AXIS_CHART_DATA, data: chartsData});
 const getCalendarChartData = (calendarData) => ({type: types.GET_CALENDAR_CHART_DATA, data: calendarData});
 const getCategoryChartData = (categoryData) => ({type: types.GET_CATEGORY_DATA, data: categoryData});
+const getStatistics = (statistics) => ({type: types.GET_STATISTICS, data: statistics});
 
 export const fetchNotifications = (options, callback) => {
   return (dispatch) => {
@@ -94,6 +102,43 @@ export const fetchCategoryData = (sql, homenviDataType, title) => {
   return (dispatch) => {
     request(method, url, undefined, (response) => {
       dispatch(getCategoryChartData(resolveCategoryData(response, homenviDataType, title)));
+    });
+  }
+};
+
+
+export const fetchStatistics = () => {
+  let {route, method} = influx.query;
+  let url = route;
+  url += Symbol.QUES;
+  url += encodeUrlData(InfluxAuth);
+  const fields = VitalHomenviDataTypes.map(type => (`mean(${type.field}) as ${type.field}`));
+  const condition = ['time>now()-2d'];
+  const orders = [new Pair('time', 'desc')];
+  const sql = SqlHelper.query(fields, 'collections', condition, ['time(1d)'], orders);
+  url += `&q=${sql}`;
+
+  return (dispatch) => {
+    request(method, url, undefined, (response) => {
+      const series = response.results[0].series[0];
+      const {values, columns} = series;
+      const todayData = values[0], yesterdayData = values[1];
+      let statistics = [];
+      for (let i = 1; i < columns.length; i++) {
+        for (let index in VitalHomenviDataTypes) {
+          const type = VitalHomenviDataTypes[index];
+          if (type.field === columns[i]) {
+            const value = todayData[i];
+            let trend = trends.up;
+            if (value < yesterdayData[i]) {
+              trend = trends.down
+            }
+            statistics.push(new HomenviStatistic(type.name, value, type.unit, trend, type.state(value)));
+            break;
+          }
+        }
+      }
+      dispatch(getStatistics(statistics));
     });
   }
 };

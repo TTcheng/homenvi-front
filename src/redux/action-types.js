@@ -6,3 +6,4 @@ export const GET_ALL_NOTICES = 'getAllNotices';
 export const GET_AXIS_CHART_DATA = 'getChartsData';
 export const GET_CALENDAR_CHART_DATA = 'getCalendarData';
 export const GET_CATEGORY_DATA = 'getCategoryData';
+export const GET_STATISTICS = 'getStatistics';

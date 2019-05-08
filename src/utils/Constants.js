@@ -1,4 +1,5 @@
 import Pair from "../model/pair";
+import {arrayOfObjProps} from "./ArrayUtils";
 
 export const client = {
   grant_type: "password",
@@ -36,24 +37,47 @@ export const InfluxAuth = {
   p: 'homenvi',
 };
 
+export const levels = {good: 'good', warning: 'warning', danger: 'danger'};
 export const HomenviDataTypes = {
   humidity: {
     field: 'humidity',
     name: '湿度',
     unit: '%',
-    nameUnit: new Pair('湿度', '%')
+    nameUnit: new Pair('湿度', '%'),
+    state: (value) => {
+      if (value > 30 || value < 80) {
+        return levels.good;
+      }
+      return levels.danger;
+    },
   },
   celsius: {
     field: 'celsius',
     name: '温度',
     unit: '℃',
     nameUnit: new Pair('温度', '℃'),
+    state: (value) => {
+      if (value > 15 || value < 30) {
+        return levels.good;
+      } else if (value > 0 || value < 40) {
+        return levels.warning
+      }
+      return levels.danger;
+    },
   },
   heatIndexCelsius: {
     field: 'heatIndexCelsius',
     name: '体感温度',
     unit: '℃',
     nameUnit: new Pair('体感温度', '℃'),
+    state: (value) => {
+      if (value > 15 || value < 30) {
+        return levels.good;
+      } else if (value > 0 || value < 40) {
+        return levels.warning
+      }
+      return levels.danger;
+    },
   },
   fahrenheit: {
     field: 'fahrenheit',
@@ -72,12 +96,26 @@ export const HomenviDataTypes = {
     name: '光线强度',
     unit: 'lux',
     nameUnit: new Pair('光线强度', 'lux'),
+    state: (value) => {
+      if (value > 50 || value < 500) {
+        return levels.good;
+      }
+      return levels.danger;
+    },
   },
   dustDensity: {
     field: 'dustDensity',
     name: 'PM2.5浓度',
     unit: 'ug/m³',
     nameUnit: new Pair('PM2.5浓度', 'ug/m³'),
+    state: (value) => {
+      if (value < 100) {
+        return levels.good;
+      } else if (value < 200) {
+        return levels.warning
+      }
+      return levels.danger;
+    },
     categories: ['严重污染', '重度污染', '中度污染', '轻度污染', '良', '优'],
     category: (value) => {
       if (!value) return null;
@@ -97,13 +135,36 @@ export const HomenviDataTypes = {
   gasValue: {
     field: 'gasValue',
     name: '烟雾和有毒气体',
-    unit: '模拟值',
+    unit: '',
     nameUnit: new Pair('烟雾和有毒气体', ''),
+    state: (value) => {
+      if (value < 400) {
+        return levels.good;
+      }
+      return levels.danger;
+    },
   },
   sound: {
     field: 'sound',
     name: '声音强度',
-    unit: '模拟值',
+    unit: '',
     nameUnit: new Pair('声音强度', ''),
+    state: (value) => {
+      if (value < 500) {
+        return levels.good;
+      }
+      return levels.warning;
+    },
   },
 };
+
+export const VitalHomenviDataTypes = [
+  HomenviDataTypes.humidity,
+  HomenviDataTypes.celsius,
+  HomenviDataTypes.brightness,
+  HomenviDataTypes.dustDensity,
+  HomenviDataTypes.gasValue,
+  HomenviDataTypes.sound,
+];
+
+export const AllHomenviDataTypes = arrayOfObjProps(HomenviDataTypes);

@@ -4,12 +4,16 @@ import User from "../model/user";
 const defaultState = {
   user: new User(),
   notices: {},
+  statistics: [],
   chartsData: {},
 };
 
 export function appReducer(state = defaultState, action) {
   let newState = {...state};
   switch (action.type) {
+    case types.GET_STATISTICS:
+      newState.statistics = action.data;
+      return newState;
     case types.GET_CATEGORY_DATA:
       newState.chartsData.category = action.data;
       return newState;
