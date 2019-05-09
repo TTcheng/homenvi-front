@@ -75,7 +75,8 @@ export default class AxisChart extends PureComponent {
     const {type, title, seriesData, nameUnitPairs} = this.props.data;
     return {
       title: {
-        text: title + '折线图'
+        text: title + '折线图',
+        show: false,
       },
       tooltip: {
         trigger: 'axis',

@@ -114,9 +114,9 @@ export const fetchStatistics = () => {
   url += Symbol.QUES;
   url += encodeUrlData(InfluxAuth);
   const fields = VitalHomenviDataTypes.map(type => (`mean(${type.field}) as ${type.field}`));
-  const condition = ['time>now()-2d'];
+  const condition = ['time>now()-2h'];
   const orders = [new Pair('time', 'desc')];
-  const sql = SqlHelper.query(fields, 'collections', condition, ['time(1d)'], orders);
+  const sql = SqlHelper.query(fields, 'collections', condition, ['time(1h)'], orders);
   url += `&q=${sql}`;
 
   return (dispatch) => {

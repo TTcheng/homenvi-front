@@ -53,7 +53,7 @@ class Pm25CategoryChart extends Component {
         {dim: 1, name: schema[1].text, min: 0, max: 250},
         {
           dim: 2, name: schema[2].text,
-          type: 'category', data: dustDensity.categories.reverse()
+          type: 'category', data: [...dustDensity.categories].reverse()
         }
       ],
       visualMap: {

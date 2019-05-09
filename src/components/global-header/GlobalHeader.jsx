@@ -17,13 +17,19 @@ class GlobalHeader extends PureComponent {
     fetchNotifications: PropTypes.func.isRequired,
   };
 
+  state = {
+    content: 'dashboard'
+  };
+
+  componentDidMount() {
+    const path = routes.index + "/" + this.state.content;
+    this.props.history.replace(path);
+  }
+
   onNavMenuClick = (item) => {
     const path = routes.index + "/" + item.key;
-    if (item.key === "dashboard") {
-      this.props.history.replace(path);
-      return;
-    }
-    this.props.history.push(path);
+    this.props.history.replace(path);
+    this.setState({content: item.key})
   };
 
   render() {
@@ -56,10 +62,10 @@ class GlobalHeader extends PureComponent {
         <img className="ml-4 mr-4 float-left" src={logo} alt="logo" width="128" height="64"/>
         <Menu className={"left"} mode={"horizontal"} onClick={this.onNavMenuClick} defaultSelectedKeys={["dashboard"]}>
           <Menu.Item style={{"marginTop": "6px"}} key={"dashboard"}>
-            仪表盘
+            监测面板
           </Menu.Item>
-          <Menu.Item key={"report"}>
-            报表
+          <Menu.Item key={"analysis"}>
+            分析面板
           </Menu.Item>
         </Menu>
         <div className="right">

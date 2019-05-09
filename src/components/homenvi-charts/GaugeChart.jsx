@@ -241,11 +241,11 @@ class GaugeChart extends Component {
             formatter: function (v) {
               switch (v + '') {
                 case '' + slaveBottomRight.min :
-                  return 'L';
+                  return '低';
                 case '' + (slaveBottomRight.min + slaveBottomRight.max) / 2 :
                   return 'gas';
                 case '' + slaveBottomRight.max :
-                  return 'H';
+                  return '高';
               }
             }
           },

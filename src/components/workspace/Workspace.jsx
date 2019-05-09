@@ -1,19 +1,16 @@
 import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
-import {Col, Layout, notification, Row} from "antd";
+import {Layout, notification} from "antd";
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import {Redirect, Route, Router} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 
 import GlobalHeader from "../global-header/GlobalHeader";
 import logo from '../../containers/homenvi.svg'
 import {BaseConstants} from "../../utils/Constants";
-// import {routes} from "../../config/routes";
-import {
-  AxisChartProvider,
-  CalendarChartProvider, GaugeChartProvider,
-  PM25ChartProvider,
-  StatisticProvider
-} from "../../containers/ContainerProvider";
+import {routes} from "../../config/routes";
+import {AxisChartProvider} from "../../containers/ContainerProvider";
+import Dashboard from "../../containers/Dashboard";
+import Analysis from "../../containers/Analysis";
 
 const {Footer, Content} = Layout;
 
@@ -48,29 +45,14 @@ class Workspace extends Component {
         />
         <Content style={{margin: '24px 24px 0', height: '100%'}}>
           <div style={{background: '#fff', padding: 24, minHeight: 480}}>
-            <StatisticProvider/>
-            <div>
-              <Row>
-                <Col span={8}>
-                  <CalendarChartProvider/>
-                </Col>
-                <Col span={8}>
-                  <GaugeChartProvider/>
-                </Col>
-                <Col span={8}>
-                  <PM25ChartProvider/>
-                </Col>
-              </Row>
-            </div>
-            <AxisChartProvider/>
-            {/*<Switch>*/}
-            {/*  <Route path={routes.dashboard} component={AxisChartProvider}/>*/}
-            {/*  <Redirect to={routes.dashboard}/>*/}
-            {/*</Switch>*/}
+            <Switch>
+              <Route path={routes.dashboard} component={Dashboard}/>
+              <Route path={routes.analysis} component={Analysis}/>
+            </Switch>
           </div>
         </Content>
         <Footer style={{textAlign: "center"}}>
-          Homenvi . Created by ChunchengWang
+          Homenvi . developed by WangChuncheng
         </Footer>
       </Layout>
     );
