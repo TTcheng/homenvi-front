@@ -16,18 +16,17 @@ export default class Statistics extends Component {
 
   render() {
     const {statistics} = this.props;
-    console.debug(statistics);
     if (!statistics || statistics.length < 1) {
       return null;
     }
     const colLen = Math.floor(24 / statistics.length);
     return (
-      <div style={{background: '#fff', 'padding-bottom': '10px', 'border-bottom': '2px solid rgba(0,0,0,0.2)'}}>
+      <div style={{background: '#fff', 'paddingBottom': '10px', 'borderBottom': '2px solid rgba(0,0,0,0.2)'}}>
         <Row gutter={16}>
-          {statistics.map(statistic => {
+          {statistics.map((statistic, index) => {
             const {title, value, precision, color, prefix, suffix} = statistic;
             return (
-              <Col span={colLen}>
+              <Col key={index} span={colLen}>
                 <Statistic
                   title={title}
                   value={value}

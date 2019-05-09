@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import {HomenviDataTypes} from '../../utils/Constants'
 import SqlHelper from "../../utils/SqlHelper";
+import './Chart.css'
 
 const {dustDensity} = HomenviDataTypes;
 const {RangePicker} = DatePicker;
@@ -116,7 +117,11 @@ class Pm25CategoryChart extends Component {
           style={{height: '350px', width: '100%'}}
           className='react_for_echarts'/>
         <div className={"center"}>
-          <RangePicker defaultPickerValue={[start, end]} defaultValue={[start, end]} onChange={this.onRangePick}/>
+          <RangePicker
+            allowClear={false}
+            defaultPickerValue={[start, end]}
+            defaultValue={[start, end]}
+            onChange={this.onRangePick}/>
         </div>
       </div>
     );

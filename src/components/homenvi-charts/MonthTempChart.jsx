@@ -8,6 +8,7 @@ import {CalendarData} from "../../model/chart-data";
 import {HomenviDataTypes} from "../../utils/Constants";
 import SqlHelper from "../../utils/SqlHelper";
 import {cnMonth} from "../../utils/CalendarUtils";
+import './Chart.css'
 
 const {celsius} = HomenviDataTypes;
 const {MonthPicker} = DatePicker;
@@ -125,6 +126,7 @@ class MonthTempChart extends Component {
         <div className="center">
           <label className="plain-text">选择月份：</label>
           <MonthPicker
+            allowClear={false}
             defaultValue={this.startOfMonth()}
             defaultPickerValue={this.startOfMonth()}
             onChange={this.onMonthPick}/>

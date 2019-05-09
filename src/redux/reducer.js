@@ -11,6 +11,9 @@ const defaultState = {
 export function appReducer(state = defaultState, action) {
   let newState = {...state};
   switch (action.type) {
+    case types.GET_GAUGE_DATA:
+      newState.chartsData.gauge = action.data;
+      return newState;
     case types.GET_STATISTICS:
       newState.statistics = action.data;
       return newState;

@@ -10,11 +10,10 @@ import {BaseConstants} from "../../utils/Constants";
 // import {routes} from "../../config/routes";
 import {
   AxisChartProvider,
-  CalendarChartProvider,
+  CalendarChartProvider, GaugeChartProvider,
   PM25ChartProvider,
   StatisticProvider
 } from "../../containers/ContainerProvider";
-import GaugeChart from "../homenvi-charts/GaugeChart";
 
 const {Footer, Content} = Layout;
 
@@ -56,7 +55,7 @@ class Workspace extends Component {
                   <CalendarChartProvider/>
                 </Col>
                 <Col span={8}>
-                  <GaugeChart/>
+                  <GaugeChartProvider/>
                 </Col>
                 <Col span={8}>
                   <PM25ChartProvider/>

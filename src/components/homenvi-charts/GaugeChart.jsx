@@ -2,70 +2,105 @@ import React, {Component} from 'react';
 import * as PropTypes from 'prop-types';
 import ReactEcharts from "echarts-for-react/lib/index";
 
-class GaugeChart extends Component {
-  static propTypes = {};
+import './Chart.css'
+import {GaugeData} from "../../model/chart-data";
+import SqlHelper from "../../utils/SqlHelper";
+import {HomenviDataTypes} from "../../utils/Constants";
+import {Select} from "antd";
 
-  state = {};
+const Option = Select.Option;
+const {humidity, celsius, brightness, dustDensity, sound, gasValue} = HomenviDataTypes;
+const masters = [humidity, celsius];
+const slaves = [brightness, dustDensity];
+
+class GaugeChart extends Component {
+  static propTypes = {
+    data: PropTypes.instanceOf(GaugeData),
+    fetchData: PropTypes.func.isRequired,
+  };
+
+  state = {
+    master: masters[0],
+    slave: slaves[0],
+  };
+
+  getData = () => {
+    const {master, slave} = this.state;
+    const types = [master, slave, sound, gasValue,];
+    let fields = types.map(value => (`last(${value.field}) as ${value.field}`));
+    const sql = SqlHelper.query(fields, 'collections');
+    this.props.fetchData(sql, types, '仪表盘')
+  };
 
   componentDidMount() {
+    this.getData();
     const interval = setInterval(() => {
-      const speed = (Math.random() * 100).toFixed(2) - 0;
-      const revolution = (Math.random() * 7).toFixed(2) - 0;
-      const gasFuel = (Math.random() * 2).toFixed(2) - 0;
-      const water = (Math.random() * 2).toFixed(2) - 0;
-      this.setState({interval, option: this.getOption(speed, revolution, gasFuel, water)})
-    }, 2000);
+      this.getData();
+    }, 6000);
+    this.setState({interval});
   }
 
   componentWillUnmount() {
     clearInterval(this.state.interval)
   }
 
-  getOption = (speed, revolution, gasFuel, water) => {
+  getOption = () => {
+    const {data} = this.props;
+    if (!data) return null;
+    const {seriesData} = data;
+    let master = seriesData[0], slaveLeft = seriesData[1], slaveTopRight = seriesData[2],
+      slaveBottomRight = seriesData[3];
     return {
       tooltip: {
         formatter: "{a} <br/>{c} {b}"
       },
       series: [
         {
-          name: '速度',
+          name: master.name,
           type: 'gauge',
           z: 3,
-          min: 0,
-          max: 220,
-          splitNumber: 11,
-          radius: '50%',
+          min: master.min,
+          max: master.max,
+          splitNumber: 10,
+          radius: '60%',
           axisLine: {            // 坐标轴线
             lineStyle: {       // 属性lineStyle控制线条样式
-              width: 10
+              width: 8
             }
           },
-          axisTick: {            // 坐标轴小标记
-            length: 15,        // 属性length控制线长
+          axisTick: {            // 小刻度
+            length: 12,        // 属性length控制线长
             lineStyle: {       // 属性lineStyle控制线条样式
               color: 'auto'
             }
           },
-          splitLine: {           // 分隔线
-            length: 20,         // 属性length控制线长
+          splitLine: {           // 大刻度
+            length: 15,         // 属性length控制线长
             lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
               color: 'auto'
             }
           },
           axisLabel: {
+            fontSize: 8,
             backgroundColor: 'auto',
             borderRadius: 2,
             color: '#eee',
-            padding: 3,
-            textShadowBlur: 2,
-            textShadowOffsetX: 1,
-            textShadowOffsetY: 1,
-            textShadowColor: '#222'
+            padding: 2,
+            formatter: (value) => {
+              if (value > 1000) {
+                return `${value - 1000}k`
+              }
+              return value;
+            }
+          },
+          pointer: {
+            width: 5
           },
           title: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+            show: false,
             fontWeight: 'bolder',
-            fontSize: 20,
+            fontSize: 16,
             fontStyle: 'italic'
           },
           detail: {
@@ -74,86 +109,83 @@ class GaugeChart extends Component {
               value = (value + '').split('.');
               value.length < 2 && (value.push('00'));
               return ('00' + value[0]).slice(-2)
-                + '.' + (value[1] + '00').slice(0, 2);
+                + '.' + (value[1] + '00').slice(0, 2) + master.unit;
             },
-            fontWeight: 'bolder',
-            borderRadius: 3,
-            backgroundColor: '#444',
-            borderColor: '#aaa',
-            shadowBlur: 5,
-            shadowColor: '#333',
-            shadowOffsetX: 0,
-            shadowOffsetY: 3,
-            borderWidth: 2,
-            textBorderColor: '#000',
-            textBorderWidth: 2,
-            textShadowBlur: 2,
-            textShadowColor: '#fff',
-            textShadowOffsetX: 0,
-            textShadowOffsetY: 0,
-            fontFamily: 'Arial',
-            width: 100,
-            color: '#eee',
-            rich: {}
+            fontSize: 16,
           },
-          data: [{value: speed, name: 'km/h'}]
+          data: [{value: master.value, name: master.unit}]
         },
         {
-          name: '转速',
+          name: slaveLeft.name,
           type: 'gauge',
-          center: ['20%', '55%'],    // 默认全局居中
-          radius: '35%',
-          min: 0,
-          max: 7,
+          center: ['16%', '50%'],    // 默认全局居中
+          radius: '40%',
+          min: slaveLeft.min,
+          max: slaveLeft.max,
           endAngle: 45,
-          splitNumber: 7,
+          startAngle: 315,
+          splitNumber: 5,
           axisLine: {            // 坐标轴线
             lineStyle: {       // 属性lineStyle控制线条样式
-              width: 8
+              width: 6
             }
           },
           axisTick: {            // 坐标轴小标记
-            length: 12,        // 属性length控制线长
+            length: 10,        // 属性length控制线长
             lineStyle: {       // 属性lineStyle控制线条样式
               color: 'auto'
             }
           },
           splitLine: {           // 分隔线
-            length: 20,         // 属性length控制线长
+            length: 12,         // 属性length控制线长
             lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
               color: 'auto'
             }
           },
+          axisLabel: {
+            formatter: (value) => {
+              if (value > 999) {
+                return `${(Math.round(value / 1000))}k`
+              }
+              return value;
+            }
+          },
           pointer: {
-            width: 5
+            width: 3
           },
           title: {
             offsetCenter: [0, '-30%'],       // x, y，单位px
+            fontSize: 10,
+            fontStyle: 'italic'
           },
           detail: {
             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-            fontWeight: 'bolder'
+            fontWeight: 'bolder',
+            fontSize: 12,
+            formatter: (value) => {
+              return `${value}${slaveLeft.unit}`
+            }
           },
-          data: [{value: revolution, name: 'x1000 r/min'}]
+          data: [{value: slaveLeft.value, name: slaveLeft.unit}]
         },
         {
-          name: '油表',
+          name: slaveTopRight.name,
           type: 'gauge',
-          center: ['77%', '50%'],    // 默认全局居中
-          radius: '25%',
-          min: 0,
-          max: 2,
+          center: ['83%', '50%'],    // 默认全局居中
+          radius: '38%',
+          min: slaveBottomRight.min,
+          max: slaveBottomRight.max,
           startAngle: 135,
           endAngle: 45,
           splitNumber: 2,
           axisLine: {            // 坐标轴线
             lineStyle: {       // 属性lineStyle控制线条样式
-              width: 8
+              width: 6
             }
           },
           axisTick: {            // 坐标轴小标记
             splitNumber: 5,
-            length: 10,        // 属性length控制线长
+            length: 8,        // 属性length控制线长
             lineStyle: {        // 属性lineStyle控制线条样式
               color: 'auto'
             }
@@ -161,17 +193,17 @@ class GaugeChart extends Component {
           axisLabel: {
             formatter: function (v) {
               switch (v + '') {
-                case '0' :
-                  return 'E';
-                case '1' :
-                  return 'Gas';
-                case '2' :
-                  return 'F';
+                case '' + slaveTopRight.min :
+                  return '静';
+                case '' + (slaveTopRight.min + slaveTopRight.max) / 2 :
+                  return 'sound';
+                case '' + slaveTopRight.max :
+                  return '噪';
               }
             }
           },
           splitLine: {           // 分隔线
-            length: 15,         // 属性length控制线长
+            length: 12,         // 属性length控制线长
             lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
               color: 'auto'
             }
@@ -185,21 +217,21 @@ class GaugeChart extends Component {
           detail: {
             show: false
           },
-          data: [{value: gasFuel, name: 'gas'}]
+          data: [{value: slaveTopRight.value, name: slaveTopRight.unit}]
         },
         {
-          name: '水表',
+          name: slaveBottomRight.name,
           type: 'gauge',
-          center: ['77%', '50%'],    // 默认全局居中
-          radius: '25%',
-          min: 0,
-          max: 2,
+          center: ['83%', '50%'],    // 默认全局居中
+          radius: '38%',
+          min: slaveBottomRight.min,
+          max: slaveBottomRight.max,
           startAngle: 315,
           endAngle: 225,
           splitNumber: 2,
           axisLine: {            // 坐标轴线
             lineStyle: {       // 属性lineStyle控制线条样式
-              width: 8
+              width: 6
             }
           },
           axisTick: {            // 坐标轴小标记
@@ -208,17 +240,17 @@ class GaugeChart extends Component {
           axisLabel: {
             formatter: function (v) {
               switch (v + '') {
-                case '0' :
+                case '' + slaveBottomRight.min :
+                  return 'L';
+                case '' + (slaveBottomRight.min + slaveBottomRight.max) / 2 :
+                  return 'gas';
+                case '' + slaveBottomRight.max :
                   return 'H';
-                case '1' :
-                  return 'Water';
-                case '2' :
-                  return 'C';
               }
             }
           },
           splitLine: {           // 分隔线
-            length: 15,         // 属性length控制线长
+            length: 12,         // 属性length控制线长
             lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
               color: 'auto'
             }
@@ -232,26 +264,61 @@ class GaugeChart extends Component {
           detail: {
             show: false
           },
-          data: [{value: water, name: 'gas'}]
+          data: [{value: slaveBottomRight.value, name: slaveBottomRight.unit}]
         }
       ]
     };
 
   };
 
+  onMasterSelect = (selected) => {
+    for (const master of masters) {
+      if (selected === master.field) {
+        this.setState({master});
+        setTimeout(this.getData, 100);
+        break;
+      }
+    }
+  };
+
+  onSlaveSelect = (selected) => {
+    for (const slave of slaves) {
+      if (selected === slave.field) {
+        this.setState({slave});
+        setTimeout(this.getData, 100);
+        break;
+      }
+    }
+  };
+
   render() {
-    if (!this.state.option) {
+    const {data} = this.props;
+    if (!data) {
       return null;
     }
-    // let option = this.getOption();
-    let option = this.state.option;
+    let option = this.getOption();
+    const {title} = data;
     return (
       <div className='parent'>
+        <div className="title center">{title}</div>
         <ReactEcharts
           notMerge={true}
           option={option}
+          lazyUpdate={true}
           style={{height: '350px', width: '100%'}}
           className='react_for_echarts'/>
+        <div className={"center"}>
+          <label className="plain-text">副表盘：</label>
+          <Select style={{width: '120px'}} size={"default"} defaultValue={"brightness"} onSelect={this.onSlaveSelect}>
+            <Option value="brightness">光线强度</Option>
+            <Option value="dustDensity">{"PM2.5浓度"}</Option>
+          </Select>
+          <label style={{marginLeft: '20px'}} className="plain-text">主表盘：</label>
+          <Select size={"default"} defaultValue={"humidity"} onSelect={this.onMasterSelect}>
+            <Option value="humidity">湿度</Option>
+            <Option value="celsius">温度</Option>
+          </Select>
+        </div>
       </div>
     );
   }

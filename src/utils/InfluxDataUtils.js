@@ -1,4 +1,11 @@
-import ChartData, {TimeSeriesChartData, SeriesItem, CalendarData, CategoryData} from "../model/chart-data";
+import ChartData, {
+  TimeSeriesChartData,
+  SeriesItem,
+  CalendarData,
+  CategoryData,
+  GaugeData,
+  GaugeItem
+} from "../model/chart-data";
 
 export const resolveSingleQuery = (response, title = '', nameUnitPairs = []) => {
   let isTimeSeries = false;
@@ -70,4 +77,20 @@ export const resolveCategoryData = (response, homenviDataType, title) => {
     seriesData.push([date, realValue, category])
   });
   return new CategoryData(title, seriesData, homenviDataType.nameUnit);
+};
+
+export const resolveGaugeData = (response, homenviDataTypes, title) => {
+  const series = response.results[0].series[0];
+  const {values, columns} = series;
+  const realValues = values[0];
+  let seriesData = [];
+  columns.forEach((column, index) => {
+    for (const type of homenviDataTypes) {
+      if (column === type.field) {
+        seriesData.push(new GaugeItem(type.name, realValues[index], type.unit, type.min, type.max));
+        break;
+      }
+    }
+  });
+  return new GaugeData(title, seriesData);
 };

@@ -61,3 +61,31 @@ export class CategoryData {
     this.nameUnit = nameUnit;
   }
 }
+
+export class GaugeData {
+  title;
+  seriesData = []; // array of GaugeItem
+
+
+  constructor(title, seriesData) {
+    this.title = title;
+    this.seriesData = seriesData;
+  }
+}
+
+export class GaugeItem {
+  name;
+  value;
+  unit;
+  min;
+  max;
+
+
+  constructor(name, value, unit, min, max) {
+    this.name = name;
+    this.value = value;
+    this.unit = unit;
+    this.min = min;
+    this.max = max;
+  }
+}

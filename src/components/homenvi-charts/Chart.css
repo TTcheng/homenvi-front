@@ -1,0 +1,25 @@
+.parent {
+  /*{"display": "flex"}*/
+  /*background-color: rgba(0, 0, 0, 0.1);*/
+  margin: 20px 0;
+  padding: 20px;
+}
+
+.title {
+  /*color: #333333;*/
+  color: rgba(27,27,27, 0.65);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  font-family: sans-serif;
+  margin-bottom: 20px;
+}
+
+.center {
+  width: 100%;
+  text-align: center;
+}
+
+.plain-text {
+  color: rgba(0,0,0,0.65);
+}

@@ -50,6 +50,8 @@ export const HomenviDataTypes = {
       }
       return levels.danger;
     },
+    min: 0,
+    max: 100,
   },
   celsius: {
     field: 'celsius',
@@ -64,6 +66,8 @@ export const HomenviDataTypes = {
       }
       return levels.danger;
     },
+    min: -40,
+    max: 80,
   },
   heatIndexCelsius: {
     field: 'heatIndexCelsius',
@@ -78,18 +82,24 @@ export const HomenviDataTypes = {
       }
       return levels.danger;
     },
+    min: -40,
+    max: 80,
   },
   fahrenheit: {
     field: 'fahrenheit',
     name: '华氏温度',
     unit: '℉',
     nameUnit: new Pair('华氏温度', '℉'),
+    min: 104,
+    max: 176,
   },
   heatIndexFahrenheit: {
     field: 'heatIndexFahrenheit',
     name: '华氏体感温度',
     unit: '℉',
     nameUnit: new Pair('华氏体感温度', '℉'),
+    min: 104,
+    max: 176,
   },
   brightness: {
     field: 'brightness',
@@ -102,6 +112,8 @@ export const HomenviDataTypes = {
       }
       return levels.danger;
     },
+    min: 0,
+    max: 1000,
   },
   dustDensity: {
     field: 'dustDensity',
@@ -130,7 +142,9 @@ export const HomenviDataTypes = {
       } else if (value > 50) {
         return '良'
       } else return '优'
-    }
+    },
+    min: 0,
+    max: 500,
   },
   gasValue: {
     field: 'gasValue',
@@ -143,6 +157,8 @@ export const HomenviDataTypes = {
       }
       return levels.danger;
     },
+    min: 0,
+    max: 1023,
   },
   sound: {
     field: 'sound',
@@ -155,6 +171,8 @@ export const HomenviDataTypes = {
       }
       return levels.warning;
     },
+    min: 0,
+    max: 1023,
   },
 };
 

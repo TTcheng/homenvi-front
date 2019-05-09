@@ -8,7 +8,7 @@ import {InfluxAuth, NoticeTypes, Symbol, VitalHomenviDataTypes} from "../utils/C
 import {encodeUrlData} from "../utils/UrlUtils";
 import {
   resolveCalendarData,
-  resolveCategoryData,
+  resolveCategoryData, resolveGaugeData,
   resolveSingleQuery,
 } from "../utils/InfluxDataUtils";
 import SqlHelper from "../utils/SqlHelper";
@@ -25,6 +25,7 @@ const getAxisChartData = (chartsData) => ({type: types.GET_AXIS_CHART_DATA, data
 const getCalendarChartData = (calendarData) => ({type: types.GET_CALENDAR_CHART_DATA, data: calendarData});
 const getCategoryChartData = (categoryData) => ({type: types.GET_CATEGORY_DATA, data: categoryData});
 const getStatistics = (statistics) => ({type: types.GET_STATISTICS, data: statistics});
+const getGaugeData = (gaugeData) => ({type: types.GET_GAUGE_DATA, data: gaugeData});
 
 export const fetchNotifications = (options, callback) => {
   return (dispatch) => {
@@ -139,6 +140,20 @@ export const fetchStatistics = () => {
         }
       }
       dispatch(getStatistics(statistics));
+    });
+  }
+};
+
+export const fetchGaugeData = (sql, homenviDataTypes, title) => {
+  let {route, method} = influx.query;
+  let url = route;
+  url += Symbol.QUES;
+  url += encodeUrlData(InfluxAuth);
+  url += `&q=${sql}`;
+
+  return (dispatch) => {
+    request(method, url, undefined, (response) => {
+      dispatch(getGaugeData(resolveGaugeData(response, homenviDataTypes, title)));
     });
   }
 };
