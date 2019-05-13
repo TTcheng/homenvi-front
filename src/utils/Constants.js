@@ -133,13 +133,13 @@ export const HomenviDataTypes = {
       if (!value) return null;
       if (value > 250) {
         return '严重污染'
-      } else if (value > 200) {
-        return '重度污染'
       } else if (value > 150) {
+        return '重度污染'
+      } else if (value > 115) {
         return '中度污染'
-      } else if (value > 100) {
+      } else if (value > 75) {
         return '轻度污染'
-      } else if (value > 50) {
+      } else if (value > 35) {
         return '良'
       } else return '优'
     },

@@ -57,20 +57,35 @@ class MonthTempChart extends Component {
           return `${value[1]}${nameUnit.value}, ${value[0]}`;
         }
       },
-      visualMap: [{
-        min: -60,
-        max: 60,
-        calculable: true,
-        orient: 'horizontal',
-        left: 'center',
-        inRange: {
-          color: ['#5291ff', '#FFF', 'red'],
+      visualMap: [
+        {
+          min: -40,
+          max: 0,
+          calculable: true,
+          orient: 'horizontal',
+          left: '0%',
+          inRange: {
+            color: ['#5291ff', '#fff'],
+          },
+          bottom: 20,
+          formatter: (value) => {
+            return `${Math.round(value)}${nameUnit.value}`
+          }
         },
-        bottom: 20,
-        formatter: (value) => {
-          return `${Math.round(value)}${nameUnit.value}`
+        {
+          min: 0,
+          max: 60,
+          calculable: true,
+          orient: 'horizontal',
+          left: '50%',
+          inRange: {
+            color: ['#fff', '#f00'],
+          },
+          bottom: 20,
+          formatter: (value) => {
+            return `${Math.round(value)}${nameUnit.value}`
+          }
         }
-      }
       ],
       grid: {
         left: '3%',

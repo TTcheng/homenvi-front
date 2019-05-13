@@ -50,22 +50,24 @@ class Pm25CategoryChart extends Component {
     return {
       parallelAxis: [
         {dim: 0, name: schema[0].text, inverse: true, nameLocation: 'start', type: 'category'},
-        {dim: 1, name: schema[1].text, min: 0, max: 250},
+        {dim: 1, name: schema[1].text, min: 0, max: 300},
         {
           dim: 2, name: schema[2].text,
           type: 'category', data: [...dustDensity.categories].reverse()
         }
       ],
       visualMap: {
+        type: 'piecewise',
+        textGap: 5,
         show: true,
-        min: 0,
-        max: 300,
         left: 'center',
         bottom: 20,
-        dimension: 1,
+        dimension: 2,
+        categories: [...dustDensity.categories].reverse(),
         orient: 'horizontal',
         inRange: {
-          color: ['#f00', '#ff0', '#0f0'].reverse(),
+          color: ['#f00', '#ff4400', '#ff7700',
+            '#ff0', '#88ff00', '#0f0'].reverse(),
         }
       },
       parallel: {

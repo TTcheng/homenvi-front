@@ -55,6 +55,7 @@ export default class NoticeIcon extends PureComponent {
         <Tabs className="tabs" onChange={this.onTabChange}>
           <TabPane tab={"未读"} key={"unread"}>
             <NoticeList
+              onPageChange={this.getNoticeData}
               data={notices.unread}
               type={'unread'}
               emptyText="您已读完所有消息"
@@ -62,17 +63,18 @@ export default class NoticeIcon extends PureComponent {
               onClick={item => this.onItemClick(item)}
             />
           </TabPane>
-          <TabPane tab={"已读"} key={"read"}>
-            <NoticeList
-              data={notices.read}
-              type={'read'}
-              emptyText="这里什么也没有诶"
-              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-              onClick={item => this.onItemClick(item)}
-            />
-          </TabPane>
+          {/*<TabPane tab={"已读"} key={"read"}>*/}
+          {/*  <NoticeList*/}
+          {/*    data={notices.read}*/}
+          {/*    type={'read'}*/}
+          {/*    emptyText="这里什么也没有诶"*/}
+          {/*    emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"*/}
+          {/*    onClick={item => this.onItemClick(item)}*/}
+          {/*  />*/}
+          {/*</TabPane>*/}
           <TabPane tab={"全部"} key={"all"}>
             <NoticeList
+              onPageChange={this.getNoticeData}
               data={notices.all}
               type={'all'}
               emptyText="这里什么也没有诶"

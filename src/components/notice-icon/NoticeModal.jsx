@@ -5,8 +5,19 @@ import {BaseConstants} from "../../utils/Constants";
 import {apiRequest} from "../../utils/request";
 import {notifications} from "../../config/apis";
 
+const btnTypes = {primary: 'primary', default: 'default'};
+const btnTexts = {cancel: '取消', read: '标为已读', unread: '标为未读'};
+
 class NoticeModal extends Component {
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setBtnProps(nextProps)
+  }
+
   state = {
+    readBtnType: btnTypes.primary,
+    unreadBtnType: btnTypes.default,
+    readBtnText: btnTexts.read,
+    unreadBtnText: btnTexts.unread,
     readLoading: false,
     unreadLoading: false,
   };
@@ -49,27 +60,50 @@ class NoticeModal extends Component {
     });
   };
 
+  setBtnProps = (nextProps) => {
+    const {notice} = nextProps;
+    if (null != notice && BaseConstants.YES === notice.unread) {
+      this.setState({
+        readBtnType: btnTypes.primary,
+        unreadBtnType: btnTypes.default,
+        readBtnText: btnTexts.read,
+        unreadBtnText: btnTexts.cancel,
+      });
+    } else {
+      this.setState({
+        readBtnType: btnTypes.default,
+        unreadBtnType: btnTypes.primary,
+        readBtnText: btnTexts.cancel,
+        unreadBtnText: btnTexts.unread,
+      });
+    }
+  };
+
   render() {
     const {notice, visible} = this.props;
     if (!notice) {
       return null;
     }
+    const {readBtnType, unreadBtnType, readBtnText, unreadBtnText, readLoading, unreadLoading} = this.state;
     return (
       <Modal
         title={notice.title}
         centered
         visible={visible}
         footer={[
-          <Button key="read" type="primary" loading={this.state.readLoading} onClick={this.onRead} htmlType="button">
-            标为已读
+          <Button key="read" type={readBtnType} loading={readLoading}
+                  onClick={this.onRead} htmlType="button">
+            {readBtnText}
           </Button>,
-          <Button key="unread" loading={this.state.unreadLoading} onClick={this.onUnread} htmlType="button">
-            标为未读
+          <Button key="unread" type={unreadBtnType} loading={unreadLoading}
+                  onClick={this.onUnread} htmlType="button">
+            {unreadBtnText}
           </Button>,
         ]}
         onCancel={this.props.close}
       >
-        <p>{notice.content}</p>
+        {/*<p>{notice.content}</p>*/}
+        <div dangerouslySetInnerHTML={{__html: notice.content}}/>
         <p>{notice.datetime}</p>
       </Modal>
     );

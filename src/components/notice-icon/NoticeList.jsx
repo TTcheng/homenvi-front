@@ -4,17 +4,19 @@ import classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 
 import './NoticeList.css'
+import {BaseConstants} from "../../utils/Constants";
 
 NoticeList.propTypes = {
   data: PropTypes.object,
   onClick: PropTypes.func,
+  onPageChange: PropTypes.func,
   type: PropTypes.string,
   emptyText: PropTypes.string,
   emptyImage: PropTypes.string,
 };
 
 export default function NoticeList(props) {
-  const {data, onClick, type, emptyText, emptyImage,} = props;
+  const {data, onClick, type, emptyText, emptyImage, onPageChange} = props;
   if (!data || data.totalElements === 0) {
     return (
       <div className="notFound">
@@ -25,10 +27,10 @@ export default function NoticeList(props) {
   }
   return (
     <div>
-      <ListView className="List">
+      <ListView className="list">
         {!data.content ? null : data.content.map((item, index) => {
           const itemCls = classNames("item", {
-            ["read"]: type === 'read',
+            ["read"]: item.unread === BaseConstants.NO,
           });
           return (
             <ListView.Item className={itemCls} key={item.id || index} onClick={() => onClick(item)}>
@@ -51,7 +53,8 @@ export default function NoticeList(props) {
         })}
       </ListView>
       <div className="bottom">
-        <Pagination className={"mt-2"} simple defaultCurrent={1} total={data.totalElements}/>
+        <Pagination onChange={(page, pageSize) => onPageChange(type, page - 1, pageSize)} className={"mt-2"} simple
+                    pageSize={5} defaultCurrent={1} total={data.totalElements}/>
       </div>
     </div>
   );
