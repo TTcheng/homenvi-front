@@ -7,6 +7,7 @@ import SqlHelper from "../../utils/SqlHelper";
 import ChartData, {TimeSeriesChartData} from "../../model/chart-data";
 import {AllHomenviDataTypes, BaseConstants} from '../../utils/Constants'
 import {daysBetween, nMonthsAgo} from "../../utils/DateTimeUtils";
+import "./Chart.css"
 
 const Option = Select.Option;
 

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import {
+  AxisChartProvider,
   CalendarChartProvider,
   GaugeChartProvider,
   PM25ChartProvider,
   StatisticProvider
 } from "./ContainerProvider";
-import {Col, Row} from "antd";
+import {Col, Row, Divider} from "antd";
 
 class Dashboard extends Component {
   render() {
@@ -25,6 +26,8 @@ class Dashboard extends Component {
             </Col>
           </Row>
         </div>
+        <Divider style={{'borderBottom': '2px solid rgba(0,0,0,0.2)'}}/>
+        <AxisChartProvider/>
       </div>
     );
   }

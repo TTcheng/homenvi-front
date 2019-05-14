@@ -70,7 +70,7 @@ export const HomenviDataTypes = {
     max: 80,
   },
   heatIndexCelsius: {
-    field: 'heatIndexCelsius',
+    field: 'sendibleCelsius',
     name: '体感温度',
     unit: '℃',
     nameUnit: new Pair('体感温度', '℃'),
@@ -94,7 +94,7 @@ export const HomenviDataTypes = {
     max: 176,
   },
   heatIndexFahrenheit: {
-    field: 'heatIndexFahrenheit',
+    field: 'sendibleFahrenheit',
     name: '华氏体感温度',
     unit: '℉',
     nameUnit: new Pair('华氏体感温度', '℉'),

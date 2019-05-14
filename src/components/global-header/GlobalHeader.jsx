@@ -64,9 +64,9 @@ class GlobalHeader extends PureComponent {
           <Menu.Item style={{"marginTop": "6px"}} key={"dashboard"}>
             监测面板
           </Menu.Item>
-          <Menu.Item key={"analysis"}>
-            分析面板
-          </Menu.Item>
+          {/*<Menu.Item key={"analysis"}>*/}
+          {/*  分析面板*/}
+          {/*</Menu.Item>*/}
         </Menu>
         <div className="right">
           <HeaderSearch

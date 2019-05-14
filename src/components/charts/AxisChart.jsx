@@ -114,7 +114,7 @@ export default class AxisChart extends PureComponent {
           type: 'slider',
           show: true,
           xAxisIndex: 0,
-          start: 94,
+          start: 0,
           end: 100,
           handleSize: 8
         },
@@ -143,6 +143,7 @@ export default class AxisChart extends PureComponent {
     let option = this.getOption();
     return (
       <div className='parent'>
+        <div className="title center">{this.props.data.title}</div>
         <ReactEcharts
           notMerge={true}
           option={option}
