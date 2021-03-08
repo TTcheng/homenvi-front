@@ -43,7 +43,11 @@ server {
     }
 
     location /api {
-        proxy_pass http://localhost:8080/api;
+        proxy_pass http://localhost:8880/;
+    }
+
+    location /influx {
+        proxy_pass http://localhost:8086/;
     }
 }
 ```

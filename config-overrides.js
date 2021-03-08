@@ -32,6 +32,11 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: {'^/api': '/'},
             },
+            '/influx/': {
+                target: 'http://localhost:8086',
+                changeOrigin: true,
+                pathRewrite: {'^/influx': '/'},
+            },
         };
         return configFunction;
     })
